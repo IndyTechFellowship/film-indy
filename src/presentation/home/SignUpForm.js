@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
 
-const SignInForm = (props) => {
+const SignUpForm = (props) => {
   const { handleSubmit } = props;
   return (
     <form onSubmit={handleSubmit}>
@@ -26,17 +26,17 @@ const SignInForm = (props) => {
           type="password"
         />
       </div>
-      <RaisedButton type="submit">Login</RaisedButton>
+      <RaisedButton type="submit">Register</RaisedButton>
     </form>
   )
 };
 
-SignInForm.propTypes = {
+SignUpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-const SignInFormEnriched = reduxForm({
-  form: 'signIn',
-})(SignInForm);
+const SignUpFormEnriched = reduxForm({
+  form: 'signUp',
+})(SignUpForm);
 
-export default SignInFormEnriched
+export default SignUpFormEnriched

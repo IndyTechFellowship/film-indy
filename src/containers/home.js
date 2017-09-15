@@ -16,7 +16,8 @@ class Home extends React.Component {
 
 Home.propTypes = {
   signIn: PropTypes.func.isRequired,
-}
+  signUp: PropTypes.func.isRequired
+};
 
 export default withRouter(connect(
   state => ({ home: state.home, account: state.account }),
