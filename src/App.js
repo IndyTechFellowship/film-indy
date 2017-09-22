@@ -1,21 +1,17 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 import { get } from 'lodash'
-
+import './App.css'
 import AppBar from 'material-ui/AppBar'
 import Avatar from 'material-ui/Avatar'
 import { Card } from 'material-ui/Card'
 import TextField from 'material-ui/TextField'
-
 import SearchIcon from 'material-ui/svg-icons/action/search'
-
 import Home from './containers/home'
 import Login from './containers/login/login'
 import Dashboard from './containers/dashboard/dashboard'
-
-import './App.css'
+import SignUp from './containers/signUp'
 import Logo from './film-indy-logo.png'
 
 const App = (props) => {
@@ -44,6 +40,7 @@ const App = (props) => {
       <Route exact path="/" component={Home} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/login" component={Login} />
+      <Route exact path="/signup" component={SignUp} />
     </div>
   )
 }
