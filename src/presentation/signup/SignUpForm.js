@@ -12,7 +12,6 @@ const SignUpForm = (props) => {
         <Field
           name="email"
           component={TextField}
-          hintText="Email"
           floatingLabelText="Email"
           type="email"
         />
@@ -21,12 +20,19 @@ const SignUpForm = (props) => {
         <Field
           name="password"
           component={TextField}
-          hintText="Password"
           floatingLabelText="Password"
           type="password"
         />
       </div>
-      <RaisedButton type="submit">Register</RaisedButton>
+      <div>
+	    <Field
+		  name="confirmPassword"
+		  component={TextField}
+		  floatingLabelText="Confirm Password"
+		  type="password"
+	    />
+      </div>
+      <RaisedButton type="submit">Sign Up</RaisedButton>
     </form>
   )
 };
@@ -35,8 +41,8 @@ SignUpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-const SignUpFormEnriched = reduxForm({
+const SignUpFormFormEnriched = reduxForm({
   form: 'signUp',
 })(SignUpForm);
 
-export default SignUpFormEnriched
+export default SignUpFormFormEnriched

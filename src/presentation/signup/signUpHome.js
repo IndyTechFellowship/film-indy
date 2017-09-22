@@ -1,42 +1,42 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Snackbar from 'material-ui/Snackbar'
-import { get } from 'lodash'
-import '../../App.css'
-import SignUpForm from './SignUpForm'
+import React from "react";
+import PropTypes from "prop-types";
+import Snackbar from "material-ui/Snackbar";
+import {get} from "lodash";
+import "../../App.css";
+import SignUpForm from "./SignUpForm";
 
 const firebaseErrorCodeToFriendlyMessage = (errorCode) => {
-  switch (errorCode) {
-    case 'auth/wrong-password': return 'Invalid Password';
-    case 'auth/user-not-found': return 'No user with that email exists';
-    default: return 'unknown'
-  }
-};
+    switch (errorCode) {
+        case 'auth/email-already-in-use': return 'An account already exists for this email';
+        case 'auth/weak-password': return 'Your password must be at least 6 characters';
+        default: return 'There was an issue creating your account. Please try again'
+    }
+}
 
-const signUpPage = props => (
-  <div >
-    <SignUpForm onSubmit={values => props.signUp(values.email, values.password)} />
-    <Snackbar
-      bodyStyle={{ backgroundColor: '#F44336' }}
-      open={props.account.signInError !== undefined}
-      message={firebaseErrorCodeToFriendlyMessage(get(props, 'account.signUpError.code'))}
-      autoHideDuration={4000}
-    />
-  </div>
-);
+const SignUpPage = props => (
+    <div >
+      <SignUpForm onSubmit={values => props.signUp(values.email, values.password)}/>
+      <Snackbar
+        bodyStyle={{backgroundColor: '#F44336'}}
+        open={props.account.signUpError !== undefined}
+        message={firebaseErrorCodeToFriendlyMessage(get(props, 'account.signUpError.code'))}
+        autoHideDuration={4000}
+      />
+    </div>
+)
 
-signUpPage.propTypes = {
-  account: PropTypes.shape({
-    signUpError: PropTypes.shape({
-      code: PropTypes.string,
-      message: PropTypes.string,
+SignUpPage.propTypes = {
+    account: PropTypes.shape({
+        signUp: PropTypes.shape({
+            code: PropTypes.string,
+            message: PropTypes.string,
+        }),
     }),
-  }),
-  signUp: PropTypes.func.isRequired,
-};
+    signUp: PropTypes.func.isRequired,
+}
 
-signUpPage.defaultProps = {
-  account: {},
-};
+SignUpPage.defaultProps = {
+    account: {},
+}
 
-export default signUpPage
+export default SignUpPage
