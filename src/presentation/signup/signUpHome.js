@@ -7,14 +7,14 @@ import SignUpForm from "./SignUpForm";
 
 const firebaseErrorCodeToFriendlyMessage = (errorCode) => {
     switch (errorCode) {
-        case 'auth/email-already-in-use': return 'An account already exists for this email';
-        case 'auth/weak-password': return 'Your password must be at least 6 characters';
+        case 'auth/email-already-in-use': return "This email is already in use";
+        case 'auth/weak-password': return "Your password must be at least 6 characters";
         default: return 'There was an issue creating your account. Please try again'
     }
-}
+};
 
 const SignUpPage = props => (
-    <div >
+    <div>
       <SignUpForm onSubmit={values => props.signUp(values.email, values.password)}/>
       <Snackbar
         bodyStyle={{backgroundColor: '#F44336'}}
@@ -23,7 +23,7 @@ const SignUpPage = props => (
         autoHideDuration={4000}
       />
     </div>
-)
+);
 
 SignUpPage.propTypes = {
     account: PropTypes.shape({
@@ -33,10 +33,10 @@ SignUpPage.propTypes = {
         }),
     }),
     signUp: PropTypes.func.isRequired,
-}
+};
 
 SignUpPage.defaultProps = {
     account: {},
-}
+};
 
 export default SignUpPage
