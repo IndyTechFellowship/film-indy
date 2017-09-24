@@ -1,0 +1,96 @@
+
+/* General styles */
+
+.accountButton {
+    display: block;
+    margin: auto;
+    margin-top: 2em;
+}
+
+.fields {
+    list-style: none;
+    display: block;
+    margin: auto;
+    width: 100%;
+}
+
+/* Profile Card styles */
+
+.profileCard {
+    width: 40%;
+    height: auto;
+    margin-top: 1em !important;
+    display: block;
+    margin: auto;
+    padding: 1em;
+}
+
+.imageWrapper {
+    margin-top: 2em;
+    width: 100%;
+}
+
+.accountImage {
+    display: block;
+    margin: auto;
+    transition: .3s all;
+    cursor: pointer;
+}
+
+.cameraIcon {
+    opacity: 0;
+    position: relative;
+    z-index: -1;
+    display: block !important;
+    margin: auto;
+    width: 3em !important;
+    height: 3em !important;
+
+    margin-top: -6em;
+    margin-bottom: 4em;
+}
+
+.imageText {
+    opacity: 1;
+    cursor: pointer;
+    /*transition: .3s all;*/
+    text-align: center;
+}
+
+.accountImage:hover {
+    -webkit-filter: brightness(50%);
+}
+
+
+.accountImage:hover + .cameraIcon {
+    opacity: 1;
+    z-index: 2;
+}
+
+.cameraIcon:hover + .accountImage {
+    -webkit-filter: brightness(50%);
+
+}
+
+.profileField {
+    display: block;
+    margin-right: 10em;
+
+}
+
+/* Reset Password Card Styles */
+
+.passwordField {
+    display: block;
+    margin-right: auto;
+}
+
+.passwordCard {
+    width: 40%;
+    height: auto;
+    margin-top: 3em !important;
+    display: block;
+    margin: auto;
+    padding: 1em;
+    margin-bottom: 1em;
+}
