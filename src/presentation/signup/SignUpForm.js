@@ -21,7 +21,6 @@ const validate = values => {
         }
     }
     if (values.password && values.confirmPassword && !(values.password === values.confirmPassword)) {
-        console.log("passwords must match!");
         errors.confirmPassword = "Passwords must match";
     }
 
@@ -33,6 +32,20 @@ const SignUpForm = (props) => {
   return (
     <form
         onSubmit={handleSubmit}>
+      <div>
+        <Field
+          name="fName"
+          component={TextField}
+          floatingLabelText="First Name"
+        />
+      </div>
+      <div>
+        <Field
+          name="lName"
+          component={TextField}
+          floatingLabelText="Last Name"
+        />
+      </div>
       <div>
           <Field
           name="email"

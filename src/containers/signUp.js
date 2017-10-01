@@ -6,7 +6,7 @@ import * as exampleActions from '../redux/actions/creators/exampleActions'
 import * as accountActions from '../redux/actions/creators/accountActions'
 import SignUpHome from '../presentation/signup/signUpHome'
 
-class Home extends React.Component {
+class signUp extends React.Component {
   render() {
     return (
       <SignUpHome {...this.props} />
@@ -17,8 +17,12 @@ class Home extends React.Component {
 Home.propTypes = {
   signUp: PropTypes.func.isRequired
 }
+{/*signUp.propTypes = {*/}
+  {/*signUp: PropTypes.func.isRequired,*/}
+  {/*updateProfile: PropTypes.func.isRequired,*/}
+{/*};*/}
 
 export default withRouter(connect(
   state => ({ home: state.home, account: state.account }),
   { ...exampleActions, ...accountActions },
-)(Home))
+)(signUp))

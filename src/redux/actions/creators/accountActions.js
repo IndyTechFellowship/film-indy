@@ -34,7 +34,7 @@ export const signIn = (email, password) => dispatch => dispatch({
   payload: firebase.auth().signInWithEmailAndPassword(email, password)
 }).then(() => dispatch(push('account')))
 
-export const signUp = (email, password) => dispatch => dispatch({
+export const signUp = (fName, lName, email, password) => dispatch => dispatch({
   type: SIGN_UP,
   payload: firebase.auth().createUserWithEmailAndPassword(email, password)
 }).then(() => dispatch(push('account'))).then(() => migrateIfNeeded(email))
@@ -43,3 +43,6 @@ export const signOut = () => dispatch => dispatch({
   type: SIGN_OUT,
   payload: firebase.auth().signOut()
 }).then(() => dispatch(push('home')))
+// =======
+//   payload: firebase.auth().createUserWithEmailAndPassword(email, password),
+// }).then(() => {updateProfile({displayName: fName + " " + lName, photoURL: ""})});
