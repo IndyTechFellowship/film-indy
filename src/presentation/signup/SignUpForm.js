@@ -34,9 +34,16 @@ const SignUpForm = (props) => {
         onSubmit={handleSubmit}>
       <div>
         <Field
-          name="fullName"
+          name="firstName"
           component={TextField}
-          floatingLabelText="Full Name"
+          floatingLabelText="First Name"
+        />
+      </div>
+      <div>
+        <Field
+          name="lastName"
+          component={TextField}
+          floatingLabelText="Last Name"
         />
       </div>
       <div>

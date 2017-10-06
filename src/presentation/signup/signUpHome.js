@@ -16,7 +16,7 @@ const firebaseErrorCodeToFriendlyMessage = (errorCode) => {
 const SignUpPage = props => (
     <div>
       <SignUpForm onSubmit={values => {
-	      props.signUp(values.fullName, values.email, values.password);
+	      props.signUp(values.firstName, values.lastName, values.email, values.password);
       }}/>
       <Snackbar
         bodyStyle={{backgroundColor: '#F44336'}}
