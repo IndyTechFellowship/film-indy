@@ -28,7 +28,7 @@ const validate = values => {
 };
 
 const SignUpForm = (props) => {
-  const { handleSubmit, submitting } = props;
+  const { handleSubmit, firebase, submitting } = props;
   return (
     <form
         onSubmit={handleSubmit}>
@@ -46,6 +46,9 @@ const SignUpForm = (props) => {
           floatingLabelText="Last Name"
         />
       </div>
+        <FlatButton className="imageText" icon={<UploadIcon />} label="Upload Picture" labelPosition="before" containerElement="label">
+            <FileUploader uid={uid} uploadFile={firebase.uploadFile} />
+        </FlatButton>
       <div>
           <Field
           name="email"
@@ -74,6 +77,36 @@ const SignUpForm = (props) => {
     </form>
   )
 };
+
+const FileUploader = props => (
+        <input
+                name="myFile"
+                type="file"
+                style={{ display: 'none' }}
+                onChange={(event) => {
+                    const { uid, uploadFile, updateProfile } = props
+                    const file = event.target.files[0]
+                    const fbFilePath = `/images/users/account/${uid}/account_image`
+                    uploadFile(fbFilePath, file).then((response) => {
+                        const downloadUrl = response.downloadURL
+                        updateProfile({
+                            photoURL: downloadUrl,
+                        })
+                    })
+                }}
+        />
+)
+
+
+FileUploader.propTypes = {
+    uid: PropTypes.string,
+    uploadFile: PropTypes.func.isRequired,
+    updateProfile: PropTypes.func.isRequired,
+}
+
+FileUploader.defaultProps = {
+    uid: '',
+}
 
 SignUpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,

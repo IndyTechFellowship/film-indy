@@ -15,8 +15,16 @@ class signUp extends React.Component {
 }
 
 Home.propTypes = {
-  signUp: PropTypes.func.isRequired
+  signUp: PropTypes.func.isRequired,
+  firebase: PropTypes.shape({
+    uploadFile: PropTypes.func.isRequired,
+    updateProfile: PropTypes.func.isRequired,
+  }).isRequired
 }
+// signUp.propTypes = {
+//   signUp: PropTypes.func.isRequired,
+//
+// };
 
 export default withRouter(connect(
   state => ({ home: state.home, account: state.account }),
