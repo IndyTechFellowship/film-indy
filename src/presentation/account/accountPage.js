@@ -17,31 +17,37 @@ import UploadIcon from 'material-ui/svg-icons/file/file-upload'
 import '../../App.css'
 import './accountPage.css'
 
-const validate = values => {
-    const errors = {};
+const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+  <TextField
+    hintText={label}
+    floatingLabelText={label}
+    errorText={touched && error}
+    {...input}
+    {...custom}
+  />
+)
 
-    if (!values.firstName || !values.lastName || !values.email) {
-        if (!values.firstName) {
-            errors.firstName = "You forgot to enter your first name!";
-        }
-        if (!values.lastName) {
-            errors.lastName = "You forgot to enter your last name!";
-        }
-        if (!values.email) {
-            errors.email = "You forgot to enter an email!";
-        }
+const validate = (values) => {
+  const errors = {}
+
+  if (!values.firstName || !values.lastName || !values.email) {
+    if (!values.firstName) {
+      errors.firstName = 'You forgot to enter your first name!'
     }
-    return errors;
-};
+    if (!values.lastName) {
+      errors.lastName = 'You forgot to enter your last name!'
+    }
+    if (!values.email) {
+      errors.email = 'You forgot to enter an email!'
+    }
+  }
+  return errors
+}
 
 // Making component const throws an error that it is read-only
 const AccountPage = (props) => {
-
-  const { handleSubmit, profile, firebase, auth } = props;
+  const { handleSubmit, pristine, submitting, handleProfileChanges, profile, firebase, auth } = props
   const photoURL = get(profile, 'photoURL', '')
-  const firstName = get(profile, 'firstName', '')
-  const lastName = get(profile, 'lastName', '')
-  const email = get(auth, 'email')
   const uid = get(auth, 'uid')
 
   return (
@@ -57,40 +63,40 @@ const AccountPage = (props) => {
             <FileUploader uid={uid} uploadFile={firebase.uploadFile} updateProfile={firebase.updateProfile} />
           </FlatButton>
         </div>
-        <form onSubmit={this.handleSubmit}>
-            <ul className="fields">
-              <li>
-                <div>
-                    <Field
-                    name="firstName"
-                    component={TextField}
-                    floatingLabelText="First Name"
-                    type="text"
-                    />
-                </div>
-              </li>
-              <li>
-                <div>
-                    <Field
-                    name="lastName"
-                    component={TextField}
-                    floatingLabelText="Last Name"
-                    type="text"
-                    />
-                </div>
-              </li>
-              <li>
-                <div>
-                    <Field
-                    name="email"
-                    component={TextField}
-                    floatingLabelText="Email"
-                    type="email"
-                    />
-                </div>
-              </li>
-            </ul>
-          <RaisedButton className="accountButton" primary label="Save" />
+        <form onSubmit={handleSubmit(handleProfileChanges)}>
+          <ul className="fields">
+            <li>
+              <div>
+                <Field
+                  name="firstName"
+                  component={renderTextField}
+                  floatingLabelText="First Name"
+                  type="text"
+                />
+              </div>
+            </li>
+            <li>
+              <div>
+                <Field
+                  name="lastName"
+                  component={renderTextField}
+                  floatingLabelText="Last Name"
+                  type="text"
+                />
+              </div>
+            </li>
+            <li>
+              <div>
+                <Field
+                  name="email"
+                  component={renderTextField}
+                  floatingLabelText="Email"
+                  type="email"
+                />
+              </div>
+            </li>
+          </ul>
+          <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} />
         </form>
       </Card>
 
@@ -120,7 +126,7 @@ const AccountPage = (props) => {
 //   { load: loadAccount }, // bind account loading action creator
 // )(AccountPage);
 
-const FileUploader = props => {
+const FileUploader = props => (
   <input
     name="myFile"
     type="file"
@@ -132,42 +138,44 @@ const FileUploader = props => {
       uploadFile(fbFilePath, file).then((response) => {
         const downloadUrl = response.downloadURL
         updateProfile({
-          photoURL: downloadUrl,
+          photoURL: downloadUrl
         })
       })
-    }} />
-}
+    }}
+  />
+)
 
 FileUploader.propTypes = {
   uid: PropTypes.string,
   uploadFile: PropTypes.func.isRequired,
-  updateProfile: PropTypes.func.isRequired,
+  updateProfile: PropTypes.func.isRequired
 }
 
 FileUploader.defaultProps = {
-  uid: '',
+  uid: ''
 }
 
 AccountPage.propTypes = {
   profile: PropTypes.shape({
     firstName: PropTypes.string,
     lastName: PropTypes.string,
-    photoURL: PropTypes.string,
+    photoURL: PropTypes.string
   }).isRequired,
   auth: PropTypes.shape({
     uid: PropTypes.string,
-    email: PropTypes.string,
+    email: PropTypes.string
   }).isRequired,
   firebase: PropTypes.shape({
     updateProfile: PropTypes.func.isRequired,
-    uploadFile: PropTypes.func.isRequired,
+    uploadFile: PropTypes.func.isRequired
   }).isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
 }
 
 const AccountPageFormEnriched = reduxForm({
   form: 'updateProfile',
-    validate
-})(AccountPage);
+  validate,
+  enableReinitialize: true
+})(AccountPage)
 
 export default AccountPageFormEnriched
