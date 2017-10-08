@@ -3,6 +3,9 @@ import { Field, reduxForm } from 'redux-form'
 import PropTypes from 'prop-types'
 import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
+import UploadIcon from 'material-ui/svg-icons/file/file-upload'
+
 import './signUp.css'
 
 
@@ -28,8 +31,8 @@ const validate = values => {
 };
 
 const SignUpForm = (props) => {
-  const { handleSubmit, firebase, submitting } = props;
-  return (
+  const { handleSubmit, firebase, submitting, values } = props;
+	return (
     <form
         onSubmit={handleSubmit}>
       <div>
@@ -46,11 +49,22 @@ const SignUpForm = (props) => {
           floatingLabelText="Last Name"
         />
       </div>
-        <FlatButton className="imageText" icon={<UploadIcon />} label="Upload Picture" labelPosition="before" containerElement="label">
-            <FileUploader uid={uid} uploadFile={firebase.uploadFile} />
-        </FlatButton>
+	    <div>
+	    <Field
+			name="photoFile"
+			component={FileUploader}
+			floatingLabelText="Email"
+			type="file"
+	    />
+	    </div>
+        {/*<FlatButton className="imageText" icon={<UploadIcon />} label="Upload Picture" labelPosition="before" containerElement="label">*/}
+            {/*<FileUploader uid={uid} uploadFile={firebase.uploadFile} downloadURL={values.downloadURL}/>*/}
+        {/*</FlatButton>*/}
+	  {/*<div>*/}
+
+	  {/*</div>*/}
       <div>
-          <Field
+        <Field
           name="email"
           component={TextField}
           floatingLabelText="Email"
@@ -84,15 +98,12 @@ const FileUploader = props => (
                 type="file"
                 style={{ display: 'none' }}
                 onChange={(event) => {
-                    const { uid, uploadFile, updateProfile } = props
+                    const { uid, uploadFile, downloadURL } = props
                     const file = event.target.files[0]
-                    const fbFilePath = `/images/users/account/${uid}/account_image`
-                    uploadFile(fbFilePath, file).then((response) => {
-                        const downloadUrl = response.downloadURL
-                        updateProfile({
-                            photoURL: downloadUrl,
-                        })
-                    })
+                    {/*const fbFilePath = `/images/users/account/${uid}/account_image`*/}
+                    {/*uploadFile(fbFilePath, file).then((response) => {*/}
+                        {/*props.downloadURL = response.downloadURL*/}
+                    {/*})*/}
                 }}
         />
 )
@@ -101,7 +112,7 @@ const FileUploader = props => (
 FileUploader.propTypes = {
     uid: PropTypes.string,
     uploadFile: PropTypes.func.isRequired,
-    updateProfile: PropTypes.func.isRequired,
+    downloadURL: PropTypes.func.isRequired,
 }
 
 FileUploader.defaultProps = {
