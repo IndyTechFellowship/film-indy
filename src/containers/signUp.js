@@ -14,7 +14,7 @@ class signUp extends React.Component {
   }
 }
 
-Home.propTypes = {
+signUp.propTypes = {
   signUp: PropTypes.func.isRequired,
   firebase: PropTypes.shape({
     uploadFile: PropTypes.func.isRequired,

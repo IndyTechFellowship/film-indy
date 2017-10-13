@@ -3,8 +3,6 @@ import { Field, reduxForm } from 'redux-form'
 import PropTypes from 'prop-types'
 import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import UploadIcon from 'material-ui/svg-icons/file/file-upload'
 
 import './signUp.css'
 
@@ -31,7 +29,7 @@ const validate = values => {
 };
 
 const SignUpForm = (props) => {
-  const { handleSubmit, firebase, submitting, values } = props;
+  const { handleSubmit, submitting } = props;
 	return (
     <form
         onSubmit={handleSubmit}>
@@ -49,20 +47,22 @@ const SignUpForm = (props) => {
           floatingLabelText="Last Name"
         />
       </div>
-	    <div>
+	    <br/>
+	  <div>
 	    <Field
 			name="photoFile"
-			component={FileUploader}
-			floatingLabelText="Email"
+			component={(props) => {
+				return (
+						<div class="input-row">
+							<input type="file" {...props}/>
+							{props.touched && props.error && <span className="error">{props.error}</span>}
+						</div>
+				)
+			}}
+			floatingLabelText="Photo File"
 			type="file"
 	    />
-	    </div>
-        {/*<FlatButton className="imageText" icon={<UploadIcon />} label="Upload Picture" labelPosition="before" containerElement="label">*/}
-            {/*<FileUploader uid={uid} uploadFile={firebase.uploadFile} downloadURL={values.downloadURL}/>*/}
-        {/*</FlatButton>*/}
-	  {/*<div>*/}
-
-	  {/*</div>*/}
+	  </div>
       <div>
         <Field
           name="email"
@@ -92,32 +92,32 @@ const SignUpForm = (props) => {
   )
 };
 
-const FileUploader = props => (
-        <input
-                name="myFile"
-                type="file"
-                style={{ display: 'none' }}
-                onChange={(event) => {
-                    const { uid, uploadFile, downloadURL } = props
-                    const file = event.target.files[0]
-                    {/*const fbFilePath = `/images/users/account/${uid}/account_image`*/}
-                    {/*uploadFile(fbFilePath, file).then((response) => {*/}
-                        {/*props.downloadURL = response.downloadURL*/}
-                    {/*})*/}
-                }}
-        />
-)
+// const FileUploader = props => (
+//         <input
+//                 name="myFile"
+//                 type="file"
+//                 style={{ display: 'none' }}
+//                 onChange={(event) => {
+//                     const { uid, uploadFile, downloadURL } = props
+//                     const file = event.target.files[0]
+//                     {/*const fbFilePath = `/images/users/account/${uid}/account_image`*/}
+//                     {/*uploadFile(fbFilePath, file).then((response) => {*/}
+//                         {/*props.downloadURL = response.downloadURL*/}
+//                     {/*})*/}
+//                 }}
+//         />
+// )
 
 
-FileUploader.propTypes = {
-    uid: PropTypes.string,
-    uploadFile: PropTypes.func.isRequired,
-    downloadURL: PropTypes.func.isRequired,
-}
-
-FileUploader.defaultProps = {
-    uid: '',
-}
+// FileUploader.propTypes = {
+//     uid: PropTypes.string,
+//     uploadFile: PropTypes.func.isRequired,
+//     downloadURL: PropTypes.func.isRequired,
+// }
+//
+// FileUploader.defaultProps = {
+//     uid: '',
+// }
 
 SignUpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,

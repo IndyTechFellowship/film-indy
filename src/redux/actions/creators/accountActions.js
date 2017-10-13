@@ -58,6 +58,19 @@ const migrateIfNeeded = (email) => {
   })
 }
 
+const updateAccount = (firstName, lastName, photoFile) => {
+	const uid = firebase.auth().currentUser.uid
+	const fbFilePath = `/images/users/account/${uid}/account_image`
+	firebase.UserInfo.uploadFile(fbFilePath, photoFile).then((response) => {
+		const accountRef = firebase.database().ref(`/userAccount/${uid}`)
+		accountRef.set({
+			firstName: firstName,
+			lastName: lastName,
+			photoUrl: response.downloadURL,
+		})
+	})
+}
+
 export const signIn = (email, password) => dispatch => dispatch({
   type: SIGN_IN,
   payload: firebase.auth().signInWithEmailAndPassword(email, password)
@@ -66,7 +79,11 @@ export const signIn = (email, password) => dispatch => dispatch({
 export const signUp = (firstName, lastName, photoFile, email, password) => dispatch => dispatch({
   type: SIGN_UP,
   payload: firebase.auth().createUserWithEmailAndPassword(email, password)
-}).then(() => dispatch(push('account'))).then(() => migrateIfNeeded(email))
+}).then(() => dispatch(push('account'))).then(
+        () => {
+        	migrateIfNeeded(email)
+	        updateAccount(firstName, lastName, photoFile)
+        })
 
 export const signOut = () => dispatch => dispatch({
   type: SIGN_OUT,

@@ -38,7 +38,13 @@ SignUpPage.propTypes = {
 		updateProfile: PropTypes.func.isRequired,
 		uploadFile: PropTypes.func.isRequired,
 	}).isRequired,
-    signUp: PropTypes.func.isRequired,
+	signUp: PropTypes.shape({
+		firstName: PropTypes.string,
+		lastName: PropTypes.string,
+		photoFile: PropTypes.node,
+		email: PropTypes.string,
+		password: PropTypes.string
+	})
 };
 
 SignUpPage.defaultProps = {
