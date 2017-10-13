@@ -1,8 +1,10 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 import PropTypes from 'prop-types'
 import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
+import { connect } from 'react-redux'
+
 
 import './signUp.css'
 
@@ -51,15 +53,7 @@ const SignUpForm = (props) => {
 	  <div>
 	    <Field
 			name="photoFile"
-			component={(props) => {
-				return (
-						<div class="input-row">
-							<input type="file" {...props}/>
-							{props.touched && props.error && <span className="error">{props.error}</span>}
-						</div>
-				)
-			}}
-			floatingLabelText="Photo File"
+			component={FileInput}
 			type="file"
 	    />
 	  </div>
@@ -92,41 +86,56 @@ const SignUpForm = (props) => {
   )
 };
 
-// const FileUploader = props => (
-//         <input
-//                 name="myFile"
-//                 type="file"
-//                 style={{ display: 'none' }}
-//                 onChange={(event) => {
-//                     const { uid, uploadFile, downloadURL } = props
-//                     const file = event.target.files[0]
-//                     {/*const fbFilePath = `/images/users/account/${uid}/account_image`*/}
-//                     {/*uploadFile(fbFilePath, file).then((response) => {*/}
-//                         {/*props.downloadURL = response.downloadURL*/}
-//                     {/*})*/}
-//                 }}
-//         />
-// )
+const adaptFileEventToValue = delegate =>
+		e => delegate(e.target.files[0])
 
+const FileInput = ({
+		input: {
+				value: omitValue,
+				onChange,
+				onBlur,
+				...inputProps,
+		},
+		meta: omitMeta,
+		...props,
+}) => (
+		<div id="fileContainer">
+			<div id="fileText">
+				Profile Picture
+			</div>
+			<div id="fileInput">
+				<input
+						onChange={adaptFileEventToValue(onChange)}
+						onBlur={adaptFileEventToValue(onBlur)}
+						type="file"
+						{...inputProps}
+						{...props}
+				/>
+			</div>
+		</div>
+)
 
-// FileUploader.propTypes = {
-//     uid: PropTypes.string,
-//     uploadFile: PropTypes.func.isRequired,
-//     downloadURL: PropTypes.func.isRequired,
-// }
-//
-// FileUploader.defaultProps = {
-//     uid: '',
-// }
 
 SignUpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-const SignUpFormFormEnriched = reduxForm({
+let SignUpFormFormEnriched = reduxForm({
   form: 'signUp',
     validate
 })(SignUpForm);
+
+// Decorate with redux-form
+const selector = formValueSelector('signUp') // <-- same as form name
+SignUpFormFormEnriched = connect(
+		state => {
+			// can select values individually
+			const photoFile = selector(state, 'photoFile');
+			return {
+				photoFile,
+			}
+		}
+)(SignUpFormFormEnriched)
 
 export default SignUpFormFormEnriched
 

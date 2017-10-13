@@ -34,14 +34,10 @@ SignUpPage.propTypes = {
             message: PropTypes.string,
         }),
     }),
-	firebase: PropTypes.shape({
-		updateProfile: PropTypes.func.isRequired,
-		uploadFile: PropTypes.func.isRequired,
-	}).isRequired,
 	signUp: PropTypes.shape({
 		firstName: PropTypes.string,
 		lastName: PropTypes.string,
-		photoFile: PropTypes.node,
+		photoFile: PropTypes.object,
 		email: PropTypes.string,
 		password: PropTypes.string
 	})

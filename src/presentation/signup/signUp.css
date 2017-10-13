@@ -7,3 +7,17 @@ form {
 #confirmPasswordInput {
     padding: 0 0 40px 0;
 }
+
+#fileContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#fileText {
+    margin: 0 20px 0 75px;
+}
+
+#fileInput {
+
+}
