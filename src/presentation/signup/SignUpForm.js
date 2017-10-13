@@ -4,10 +4,7 @@ import PropTypes from 'prop-types'
 import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
 import { connect } from 'react-redux'
-
-
 import './signUp.css'
-
 
 const validate = values => {
     const errors = {};
