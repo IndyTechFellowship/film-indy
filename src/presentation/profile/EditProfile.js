@@ -11,6 +11,7 @@ import TextField from 'material-ui/TextField'
 import Snackbar from 'material-ui/Snackbar'
 import AddIcon from 'material-ui/svg-icons/content/add-circle-outline'
 import ContentAdd from 'material-ui/svg-icons/content/add'
+import VideoAdd from 'material-ui/svg-icons/av/video-call'
 import UploadIcon from 'material-ui/svg-icons/file/file-upload'
 import PropTypes from 'prop-types'
 import { get, pickBy } from 'lodash'
@@ -26,7 +27,7 @@ import '../account/accountPage.css'
 
 const styles = {
   card: {
-    width: '40%',
+    width: '50%',
     height: 'auto',
     marginTop: '1em',
     display: 'block',
@@ -455,11 +456,11 @@ class EditProfile extends React.Component {
 
         <div style={{paddingTop: '30px'}}>
           <Card style={styles.card}>
-            <CardTitle title="Featured Videos" />
+            <CardTitle title="Featured Video" />
             <Divider />
             <p style={{textAlign: 'center', opacity: '0.4'}}>Where is your video?</p>
-            <div>
-              <RaisedButton primary label="Youtube" style={{ marginTop: '10px' }} icon={<ContentAdd />} onClick={this.handleAddYoutubeOpen} >
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%'}}>
+              <RaisedButton primary label="Youtube" icon={<VideoAdd />} style={{marginRight: '10px'}} onClick={this.handleAddYoutubeOpen} >
                 <Dialog
                   title="Add a Youtube video"
                   actions={addYoutubeActions}
@@ -469,9 +470,7 @@ class EditProfile extends React.Component {
                   <AddYoutubeForm youtubeVideo={youtubeVideo} onSubmit={values => addYoutubeToProfile(youtubeVideo, values.title, values.url, uid)} />
                 </Dialog>
               </RaisedButton>
-            </div>            
-            <div>
-              <RaisedButton primary label="Vimeo" style={{ marginTop: '10px' }} icon={<ContentAdd />} onClick={this.handleAddVimeoOpen} >
+              <RaisedButton primary label="Vimeo" icon={<VideoAdd />} onClick={this.handleAddVimeoOpen} >
                 <Dialog
                   title="Add a Vimeo video"
                   actions={addVimeoActions}

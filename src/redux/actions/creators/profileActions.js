@@ -32,7 +32,7 @@ export const editProfileLink = (userLinks, indexToRemove, newTitle, newUrl, uid)
 
 export const addYoutubeToProfile = (youtubeVideo, title, url, uid) => {
   const profileRef = firebase.database().ref(`/userProfiles/${uid}`)
-  const newYoutubeVideo = [...youtubeVideo, { title, url }]
+  const newYoutubeVideo = [youtubeVideo, { title, url }]
   return {
     type: ADD_PROFILE_YOUTUBE_VIDEO,
     payload: profileRef.update({ youtubeVideo: newYoutubeVideo })
@@ -41,7 +41,7 @@ export const addYoutubeToProfile = (youtubeVideo, title, url, uid) => {
 
 export const addVimeoToProfile = (vimeoVideo, title, url, uid) => {
   const profileRef = firebase.database().ref(`/userProfiles/${uid}`)
-  const newVimeoVideo = [...vimeoVideo, { title, url }]
+  const newVimeoVideo = [vimeoVideo, { title, url }]
   return {
     type: ADD_PROFILE_VIMEO_VIDEO,
     payload: profileRef.update({ vimeoVideo: newVimeoVideo })
