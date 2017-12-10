@@ -75,7 +75,6 @@ class ViewProfile extends React.Component {
     const currentDate = new Date()
     const numYears = currentDate.getFullYear() - experience
     const headline = get(userProfile, 'headline')
-    const video = get(userProfile, 'video', '')
     const youtubeVideo = get(userProfile, 'youtubeVideo', '')
     const vimeoVideo = get(userProfile, 'vimeoVideo', '')
 

@@ -207,10 +207,8 @@ class EditProfile extends React.Component {
       })
     const userLinks = get(userProfile, 'links', [])
     const userCredits = get(userProfile, 'credits', [])
-    const profileImageUrl = get(profile, 'photoURL', '')
     const photoURL = get(profile, 'photoURL', '')
     const name = `${get(profile, 'firstName', '')} ${get(profile, 'lastName', '')}`
-    const email = get(auth, 'email', '')
     const youtubeVideo = get(profile, 'youtubeVideo', '')
     const vimeoVideo = get(profile, 'vimeoVideo', '')
     const possibleRolesToAdd = Object.keys(roles).reduce((acc, roleId) => {
@@ -356,13 +354,12 @@ class EditProfile extends React.Component {
                       </div>                   
                       <div>
                         <Field
-                          name="displayEmail"
+                          name="email"
                           component={renderTextField}
                           floatingLabelText="Display Email Address"
                           type="email"
                         />
                       </div>
-                      {/*<div style={{ fontWeight: 'bold', textAlign: 'left', marginTop: '15px'}}>{email}</div>*/}
                     </div>
                     <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} onClick={this.updateMessage} />
                   </form>

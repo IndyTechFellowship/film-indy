@@ -25,7 +25,7 @@ const createInitialValues = (state) => {
     youtubeVideo: get(state, `firebase.data.userProfiles.${uid}.youtubeVideo`),
     firstName: get(state, `firebase.data.userAccounts.${uid}.firstName`),
     lastName: get(state, `firebase.data.userAccounts.${uid}.lastName`),
-    displayEmail: displayEmail,
+    email: displayEmail,
   }
 }
 
