@@ -17,7 +17,7 @@ import AddLinkForm from './AddLinkForm'
 import EditLinkForm from './EditLinkForm'
 import AddCreditForm from './AddCreditForm'
 import '../../App.css'
-import '../../presentation/profile/ViewProfile.css'
+import './ViewProfile.css'
 
 const styles = {
   card: {
@@ -244,54 +244,45 @@ class EditProfile extends React.Component {
           <Card style={styles.card}>
             <CardTitle title="Edit Profile" />
             <Divider />
-            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 30 }}>
+            <div style={{ display: 'flex', justifyContent: 'left', paddingTop: 30 }}>
               <Avatar src={profileImageUrl} size={150} />
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-                <div style={{ fontWeight: 'bold' }}>{name}</div>
-                <div>{email}</div>
-              </div>
-            </div>
-
-            <div>
-              <form onSubmit={handleSubmit(this.handleProfileUpdate)}>
-                <div className="fields">
-                  <div>
-                    <Field
-                      name="headline"
-                      component={renderTextField}
-                      floatingLabelText="Headline"
-                      type="text"
-                    />
-                  </div>
-                  <div>
-                    <Field
-                      name="experience"
-                      component={renderTextField}
-                      floatingLabelText="Year you began working in industry"
-                      type="number"
-                    />
-                  </div>
-                  <div>
-                    <Field
-                      name="phone"
-                      component={renderTextField}
-                      floatingLabelText="Phone"
-                      type="number"
-                    />
-                  </div>
-                  <div>
-                    <Field
-                      name="video"
-                      component={renderTextField}
-                      floatingLabelText="Featured Video (must be in embed format)"
-                      type="url"
-                    />
-                  </div>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', marginLeft: '40px' }}>
+                <div style={{ fontWeight: 'bold', textAlign: 'left' }}>{name}</div>
+                <div>
+                  <form onSubmit={handleSubmit(this.handleProfileUpdate)}>
+                    <div className="fields">
+                      <div>
+                        <Field
+                          name="headline"
+                          component={renderTextField}
+                          floatingLabelText="Headline"
+                          type="text"
+                        />
+                      </div>
+                      <div>
+                        <Field
+                          name="experience"
+                          component={renderTextField}
+                          floatingLabelText="Year you began working in industry"
+                          type="number"
+                        />
+                      </div>
+                      <div>
+                        <Field
+                          name="phone"
+                          component={renderTextField}
+                          floatingLabelText="Phone"
+                          type="number"
+                        />
+                      </div>
+                      <div style={{ fontWeight: 'bold', textAlign: 'left', marginTop: '15px'}}>{email}</div>
+                    </div>
+                    <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} onClick={this.updateMessage} />
+                  </form>
                 </div>
-                <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} onClick={this.updateMessage} />
-              </form>
-            </div>
+              </div>
 
+            </div>
 
           </Card>
         </div>
@@ -305,7 +296,7 @@ class EditProfile extends React.Component {
                   <Field
                     name="bio"
                     component={renderTextField}
-                    floatingLabelText="Bio"
+                    floatingLabelText="About Me"
                     type="text"
                     multiLine
                     rows={3}
@@ -375,6 +366,25 @@ class EditProfile extends React.Component {
             </div>
           </Card>
         </div>
+
+        <div style={{paddingTop: '30px'}}>
+          <Card style={styles.card}>
+            <CardTitle title="Featured Video" />
+            <Divider />
+            <form>
+              <div>
+                <Field
+                  name="video"
+                  component={renderTextField}
+                  floatingLabelText="Featured Video (must be in embed format)"
+                  type="url"
+                />
+              </div>
+              <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} style={{ marginBottom: '10px' }} onClick={this.updateMessage} />
+            </form>
+          </Card>
+        </div>
+
         <div style={{ paddingTop: 30 }}>
           <Card className="profile-card big-card" style={styles.card}>
             <CardTitle title="Roles" />

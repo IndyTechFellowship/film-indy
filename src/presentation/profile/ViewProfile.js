@@ -57,7 +57,7 @@ class ViewProfile extends React.Component {
     const phone = formatPhoneNumber(get(userAccount, 'phone'))
 
     return (
-      <div className="ViewProfile">
+      <div className="profile">
         <div style={{ display: 'block', margin: 'auto' }}>
           <Card className="profile-card top-card" containerStyle={{ width: '50%', paddingBottom: 0, display: 'flex', flexDirection: 'row' }}>
             <CardMedia className="crew-image">
