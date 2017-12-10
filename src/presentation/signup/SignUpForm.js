@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { FacebookLoginButton } from 'react-social-login-buttons'
 import SocialLoginButton from 'react-social-login-buttons/lib/buttons/SocialLoginButton'
 import { connect } from 'react-redux'
+import { get } from 'lodash'
 import './signUp.css'
 
 const validate = (values) => {
@@ -81,6 +82,18 @@ const FileInput = ({
   </div>
 )
 
+const fireBaseErrorCode = (code) => {
+  switch (code) {
+    case 'auth/account-exists-with-different-credential':
+      return 'An account is already associated with this email. Please enter your email and password'
+    case 'auth/email-already-in-use': return 'This email is already in use'
+    case 'auth/weak-password': return 'Your password must be at least 6 characters'
+
+    default:
+      return 'Error Signing In'
+  }
+}
+
 class SignUpForm extends React.Component {
   constructor(props) {
     super(props)
@@ -95,8 +108,9 @@ class SignUpForm extends React.Component {
     this.setState({ open: false, continueWithEmail: false })
   }
   render() {
-    const { handleSubmit, error, submitting, pristine, sendSubmit, signUpWithGoogle, signUpWithFacebook } = this.props
+    const { account, handleSubmit, error, submitting, pristine, sendSubmit, signUpWithGoogle, signUpWithFacebook } = this.props
     const { continueWithEmail } = this.state
+    const socialSignInError = get(account, 'socialSignInError.code')
     const actions = [
       <FlatButton
         label="Cancel"
@@ -134,6 +148,11 @@ class SignUpForm extends React.Component {
                   name="firstName"
                   component={TextField}
                   floatingLabelText="First Name"
+                  onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                      sendSubmit()
+                    }
+                  }}
                 />
               </div>
               <div>
@@ -141,6 +160,11 @@ class SignUpForm extends React.Component {
                   name="lastName"
                   component={TextField}
                   floatingLabelText="Last Name"
+                  onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                      sendSubmit()
+                    }
+                  }}
                 />
               </div>
               <br />
@@ -157,6 +181,11 @@ class SignUpForm extends React.Component {
                   component={TextField}
                   floatingLabelText="Email"
                   type="email"
+                  onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                      sendSubmit()
+                    }
+                  }}
                 />
               </div>
               <div>
@@ -165,6 +194,11 @@ class SignUpForm extends React.Component {
                   component={TextField}
                   floatingLabelText="Password"
                   type="password"
+                  onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                      sendSubmit()
+                    }
+                  }}
                 />
               </div>
               <div id="confirmPasswordInput">
@@ -173,28 +207,37 @@ class SignUpForm extends React.Component {
                   component={TextField}
                   floatingLabelText="Confirm Password"
                   type="password"
+                  onKeyPress={(ev) => {
+                    if (ev.key === 'Enter') {
+                      sendSubmit()
+                    }
+                  }}
                 />
               </div>
             </form>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 40 }}>
-                <FacebookLoginButton onClick={() => signUpWithFacebook()} text="Sign up with Facebook" style={{ marginBottom: 20 }} />
-                <GoogleLoginButton onClick={() => signUpWithGoogle()} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <div style={{ marginLeft: 75, marginTop: 10, border: '1px solid #979797', height: 60, width: 0 }} />
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 75, width: 48, height: 48, borderRadius: '50%', border: '1px solid grey' }}> OR </div>
-                <div style={{ marginLeft: 75, border: '1px solid #979797', height: 60, width: 0 }} />
-              </div>
-              <div style={{ paddingTop: 80 }}>
-                <RaisedButton style={{ width: 238, marginLeft: 55 }} onClick={() => this.setState({ continueWithEmail: true })}>
+            <div>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 40 }}>
+                  <FacebookLoginButton onClick={() => signUpWithFacebook()} text="Sign up with Facebook" style={{ marginBottom: 20 }} />
+                  <GoogleLoginButton onClick={() => signUpWithGoogle()} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                  <div style={{ marginLeft: 75, marginTop: 10, border: '1px solid #979797', height: 60, width: 0 }} />
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 75, width: 48, height: 48, borderRadius: '50%', border: '1px solid grey' }}> OR </div>
+                  <div style={{ marginLeft: 75, border: '1px solid #979797', height: 60, width: 0 }} />
+                </div>
+                <div style={{ paddingTop: 80 }}>
+                  <RaisedButton style={{ width: 238, marginLeft: 55 }} onClick={() => this.setState({ continueWithEmail: true })}>
                   Sign Up with Email
-                </RaisedButton>
+                  </RaisedButton>
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, color: 'red' }}>
+                {socialSignInError ? fireBaseErrorCode(socialSignInError) : ''}
               </div>
             </div>
           )}
-
         </Dialog>
       </div>
     )
@@ -202,6 +245,8 @@ class SignUpForm extends React.Component {
 }
 
 SignUpForm.propTypes = {
+  cancelSignInUpForm: PropTypes.func.isRequired,
+  account: PropTypes.object.isRequired,
   signUpWithGoogle: PropTypes.func.isRequired,
   signUpWithFacebook: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

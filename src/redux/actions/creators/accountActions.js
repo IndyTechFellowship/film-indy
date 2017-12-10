@@ -232,6 +232,10 @@ export const signUpWithFacebook = () => (dispatch) => {
   })
 }
 
+export const cancelSignInUpForm = () => ({
+  type: 'Cancel_Sign_In_Up_Form'
+})
+
 export const submitSignUp = () => dispatch => dispatch(submit('signUp'))
 
 export const submitSignIn = () => dispatch => dispatch(submit('signIn'))

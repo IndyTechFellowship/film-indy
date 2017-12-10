@@ -11,13 +11,18 @@ import TextField from 'material-ui/TextField'
 import Snackbar from 'material-ui/Snackbar'
 import AddIcon from 'material-ui/svg-icons/content/add-circle-outline'
 import ContentAdd from 'material-ui/svg-icons/content/add'
+import UploadIcon from 'material-ui/svg-icons/file/file-upload'
 import PropTypes from 'prop-types'
 import { get, pickBy } from 'lodash'
+import moment from 'moment'
 import AddLinkForm from './AddLinkForm'
 import EditLinkForm from './EditLinkForm'
+import AddYoutubeForm from './AddYoutubeForm'
+import AddVimeoForm from './AddVimeoForm'
 import AddCreditForm from './AddCreditForm'
 import '../../App.css'
 import './ViewProfile.css'
+import '../account/accountPage.css'
 
 const styles = {
   card: {
@@ -59,7 +64,15 @@ const renderTextField = ({ input, name, label, meta: { touched, error }, ...cust
 class EditProfile extends React.Component {
   constructor(props) {
     super(props)
-    this.state = ({ dialogOpen: false, updated: false, addLinkDialogOpen: false, editLinkDialogOpen: false, addCreditDialogOpen: false })
+    this.state = ({ 
+      dialogOpen: false, 
+      updated: false, 
+      addLinkDialogOpen: false, 
+      editLinkDialogOpen: false, 
+      addCreditDialogOpen: false, 
+      addYoutubeDialogOpen: false,
+      addVimeoDialogOpen: false,
+    })
     this.handleClose = this.handleClose.bind(this)
     this.handleOpen = this.handleOpen.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -70,8 +83,13 @@ class EditProfile extends React.Component {
     this.handleAddLinkOpen = this.handleAddLinkOpen.bind(this)
     this.handleEditLinkClose = this.handleEditLinkClose.bind(this)
     this.handleEditLinkOpen = this.handleEditLinkOpen.bind(this)
+    this.handleAddYoutubeClose = this.handleAddYoutubeClose.bind(this)
+    this.handleAddYoutubeOpen = this.handleAddYoutubeOpen.bind(this)
+    this.handleAddVimeoClose = this.handleAddVimeoClose.bind(this)
+    this.handleAddVimeoOpen = this.handleAddVimeoOpen.bind(this)
     this.handleAddCreditClose = this.handleAddCreditClose.bind(this)
-    this.handleAddCreditOpen = this.handleAddCreditOpen.bind(this)
+    this.handleAddCreditOpen = this.handleAddCreditOpen.bind(this)    
+
   }
 
   handleAddCreditClose() {
@@ -96,6 +114,22 @@ class EditProfile extends React.Component {
 
   handleAddLinkOpen() {
     this.setState({ addLinkDialogOpen: true })
+  }
+
+  handleAddYoutubeClose() {
+    this.setState({ addYoutubeDialogOpen: false })
+  }
+
+  handleAddYoutubeOpen() {
+    this.setState({ addYoutubeDialogOpen: true })
+  }  
+
+  handleAddVimeoClose() {
+    this.setState({ addVimeoDialogOpen: false })
+  }
+
+  handleAddVimeoOpen() {
+    this.setState({ addVimeoDialogOpen: true })
   }
 
   updateMessage() {
@@ -150,12 +184,13 @@ class EditProfile extends React.Component {
   }
 
   render() {
-    const { auth, profile, data, pristine, submitting,
-      handleSubmit, remoteSubmitForm, addLinkToProfile, editProfileLink, removeProfileLink, initForm,
+    const { auth, profile, data, firebase, pristine, submitting,
+      handleSubmit, remoteSubmitForm, addLinkToProfile, editProfileLink, addYoutubeToProfile, addVimeoToProfile, removeProfileLink, initForm,
       addCredit } = this.props
     const uid = get(auth, 'uid', '')
     const selectedRoles = get(this.state, 'selectedRoles', [])
     const roles = get(data, 'roles', {})
+    const genres = get(data, 'genres', [])
     const userProfile = get(data, `userProfiles.${auth.uid}`)
     const userRoles = get(userProfile, 'roles', [])
       .map(roleId => ({ roleName: get(roles, `${roleId}.roleName`, ''), roleId }))
@@ -172,8 +207,11 @@ class EditProfile extends React.Component {
     const userLinks = get(userProfile, 'links', [])
     const userCredits = get(userProfile, 'credits', [])
     const profileImageUrl = get(profile, 'photoURL', '')
+    const photoURL = get(profile, 'photoURL', '')
     const name = `${get(profile, 'firstName', '')} ${get(profile, 'lastName', '')}`
     const email = get(auth, 'email', '')
+    const youtubeVideo = get(profile, 'youtubeVideo', '')
+    const vimeoVideo = get(profile, 'vimeoVideo', '')
     const possibleRolesToAdd = Object.keys(roles).reduce((acc, roleId) => {
       const roleName = get(roles, `${roleId}.roleName`, '')
       const r = userRoles.map(role => role.roleName)
@@ -221,6 +259,38 @@ class EditProfile extends React.Component {
           this.handleAddLinkClose()
         }}
       />
+    ]    
+
+    const addYoutubeActions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onClick={this.handleAddYoutubeClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        onClick={() => {
+          remoteSubmitForm('AddYoutubeForm')
+          this.handleAddYoutubeClose()
+        }}
+      />
+    ]
+
+    const addVimeoActions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onClick={this.handleAddVimeoClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        onClick={() => {
+          remoteSubmitForm('AddVimeoForm')
+          this.handleAddVimeoClose()
+        }}
+      />
     ]
 
     const addCreditActions = [
@@ -238,6 +308,8 @@ class EditProfile extends React.Component {
         }}
       />
     ]
+
+    const currentYear = moment().year()
     return (
       <div style={{ paddingTop: 10, display: 'flex', flexDirection: 'column' }}>
         <div>
@@ -245,8 +317,12 @@ class EditProfile extends React.Component {
             <CardTitle title="Edit Profile" />
             <Divider />
             <div style={{ display: 'flex', justifyContent: 'left', paddingTop: 30 }}>
-              <Avatar src={profileImageUrl} size={150} />
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', marginLeft: '40px' }}>
+            <div>
+              <Avatar className="accountImage avatar" src={photoURL} size={150} />
+              <FlatButton className="imageText" icon={<UploadIcon />} label="Upload Picture" labelPosition="before" containerElement="label">
+                <FileUploader uid={uid} uploadFile={firebase.uploadFile} updateProfile={firebase.updateProfile} />
+              </FlatButton>
+            </div>              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', marginLeft: '25px' }}>
                 <div style={{ fontWeight: 'bold', textAlign: 'left' }}>{name}</div>
                 <div>
                   <form onSubmit={handleSubmit(this.handleProfileUpdate)}>
@@ -263,25 +339,34 @@ class EditProfile extends React.Component {
                         <Field
                           name="experience"
                           component={renderTextField}
-                          floatingLabelText="Year you began working in industry"
+                          floatingLabelText="Year Started in Industry"
                           type="number"
+                          max={`${currentYear}`}
+                          min={`${currentYear - 100}`}
                         />
                       </div>
                       <div>
                         <Field
                           name="phone"
                           component={renderTextField}
-                          floatingLabelText="Phone"
-                          type="number"
+                          floatingLabelText="Phone Number"
+                          type="text"
+                        />
+                      </div>                   
+                      <div>
+                        <Field
+                          name="displayEmail"
+                          component={renderTextField}
+                          floatingLabelText="Display Email Address"
+                          type="email"
                         />
                       </div>
-                      <div style={{ fontWeight: 'bold', textAlign: 'left', marginTop: '15px'}}>{email}</div>
+                      {/*<div style={{ fontWeight: 'bold', textAlign: 'left', marginTop: '15px'}}>{email}</div>*/}
                     </div>
                     <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} onClick={this.updateMessage} />
                   </form>
                 </div>
               </div>
-
             </div>
 
           </Card>
@@ -307,6 +392,7 @@ class EditProfile extends React.Component {
             </form>
 
             <Divider />
+            <CardTitle title="Links" />
             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingTop: 5 }}>
               {userLinks.map((link, i) => (
                 <Chip
@@ -369,19 +455,53 @@ class EditProfile extends React.Component {
 
         <div style={{paddingTop: '30px'}}>
           <Card style={styles.card}>
-            <CardTitle title="Featured Video" />
+            <CardTitle title="Featured Videos" />
             <Divider />
-            <form>
+            <p style={{textAlign: 'center', opacity: '0.4'}}>Where is your video?</p>
+            <div>
+              <RaisedButton primary label="Youtube" style={{ marginTop: '10px' }} icon={<ContentAdd />} onClick={this.handleAddYoutubeOpen} >
+                <Dialog
+                  title="Add a Youtube video"
+                  actions={addYoutubeActions}
+                  modal
+                  open={this.state.addYoutubeDialogOpen}
+                >
+                  <AddYoutubeForm youtubeVideo={youtubeVideo} onSubmit={values => addYoutubeToProfile(youtubeVideo, values.title, values.url, uid)} />
+                </Dialog>
+              </RaisedButton>
+            </div>            
+            <div>
+              <RaisedButton primary label="Vimeo" style={{ marginTop: '10px' }} icon={<ContentAdd />} onClick={this.handleAddVimeoOpen} >
+                <Dialog
+                  title="Add a Vimeo video"
+                  actions={addVimeoActions}
+                  modal
+                  open={this.state.addVimeoDialogOpen}
+                >
+                  <AddVimeoForm vimeoVideo={vimeoVideo} onSubmit={values => addVimeoToProfile(vimeoVideo, values.title, values.url, uid)} />
+                </Dialog>
+              </RaisedButton>
+            </div>
+
+{/*            <form>
               <div>
                 <Field
-                  name="video"
+                  name="youtubeVideo"
                   component={renderTextField}
-                  floatingLabelText="Featured Video (must be in embed format)"
+                  floatingLabelText="Youtube Video Link"
                   type="url"
                 />
-              </div>
+              </div>                  
+              <div>
+                <Field
+                  name="vimeoVideo"
+                  component={renderTextField}
+                  floatingLabelText="Vimeo Video Link"
+                  type="url"
+                />
+              </div>                  
               <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} style={{ marginBottom: '10px' }} onClick={this.updateMessage} />
-            </form>
+            </form>*/}
           </Card>
         </div>
 
@@ -398,7 +518,7 @@ class EditProfile extends React.Component {
                       <div className="rounded-header"><span>{role.roleName}</span></div>
                       <div className="credits">
                         { associatedCredits.map(credit => (
-                          <p style={{ textAlign: 'left' }} key={credit.title}>{credit.year} : {credit.title}</p>
+                          <p style={{ textAlign: 'left' }} key={credit.title}>{credit.year}{credit.genre ? ` (${credit.genre})` : ''} : {credit.title}</p>
                         )
                         )}
                       </div>
@@ -417,12 +537,14 @@ class EditProfile extends React.Component {
                 open={this.state.addCreditDialogOpen}
               >
                 <AddCreditForm
+                  genres={genres}
                   userRoles={userRoles}
                   onSubmit={(values) => {
                     const role = userRoles[values.role]
+                    const genre = genres[values.genre]
                     const year = values.year
                     const title = values.title
-                    const credit = { roleId: role.roleId, title, year }
+                    const credit = { roleId: role.roleId, genre, title, year }
                     addCredit(userCredits, credit, uid)
                     this.handleAddCreditClose()
                   }}
@@ -464,6 +586,35 @@ class EditProfile extends React.Component {
   }
 }
 
+const FileUploader = props => (
+  <input
+    name="myFile"
+    type="file"
+    style={{ display: 'none' }}
+    onChange={(event) => {
+      const { uid, uploadFile, updateProfile } = props
+      const file = event.target.files[0]
+      const fbFilePath = `/images/users/account/${uid}/account_image`
+      uploadFile(fbFilePath, file).then((response) => {
+        const downloadUrl = response.uploadTaskSnaphot.downloadURL
+        updateProfile({
+          photoURL: downloadUrl
+        })
+      })
+    }}
+  />
+)
+
+FileUploader.propTypes = {
+  uid: PropTypes.string,
+  uploadFile: PropTypes.func.isRequired,
+  updateProfile: PropTypes.func.isRequired
+}
+
+FileUploader.defaultProps = {
+  uid: ''
+}
+
 EditProfile.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
@@ -477,13 +628,16 @@ EditProfile.propTypes = {
   }).isRequired,
   data: PropTypes.shape({
     roles: PropTypes.object,
-    userProfile: PropTypes.object
+    userProfile: PropTypes.object,
+    genres: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   firebase: PropTypes.shape({
     set: PropTypes.func
   }).isRequired,
   partialUpdateAlgoliaObject: PropTypes.func.isRequired,
   addLinkToProfile: PropTypes.func.isRequired,
+  addYoutubeToProfile: PropTypes.func.isRequired,
+  addVimeoToProfile: PropTypes.func.isRequired,
   removeProfileLink: PropTypes.func.isRequired,
   addCredit: PropTypes.func.isRequired,
   editProfileLink: PropTypes.func.isRequired,
@@ -498,6 +652,16 @@ EditProfile.defaultProps = {
 
 const EditProfileFormEnriched = reduxForm({
   form: 'UpdatePublicProfile',
+  validate: (values) => {
+    const errors = {}
+    const currentYear = moment().year()
+    if (values.experience) {
+      if (values.experience > currentYear || values.experience < currentYear - 100) {
+        errors.experience = `Please choose a year between ${currentYear - 100} and ${currentYear}`
+      }
+    }
+    return errors
+  },
   enableReinitialize: true
 })(EditProfile)
 

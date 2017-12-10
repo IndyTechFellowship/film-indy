@@ -151,7 +151,7 @@ class AccountPage extends React.Component {
               />
             </div>
             <div>
-              Allow others to search and view my profile
+            Just here to search? Turn your profile to "Private" to not appear in other's searches.
             </div>
           </div>
         </Card>

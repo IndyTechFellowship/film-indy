@@ -5,6 +5,7 @@ import { TextField } from 'redux-form-material-ui'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import { FacebookLoginButton } from 'react-social-login-buttons'
+import { get } from 'lodash'
 import SocialLoginButton from 'react-social-login-buttons/lib/buttons/SocialLoginButton'
 import './signInForm.css'
 import { Link } from 'react-router-dom'
@@ -30,6 +31,17 @@ const GoogleLoginButton = (props) => {
   </SocialLoginButton>)
 }
 
+const fireBaseErrorCode = (code) => {
+  switch (code) {
+    case 'auth/account-exists-with-different-credential':
+      return 'An account is already associated with this email. Please enter your email and password'
+    case 'auth/wrong-password': return 'Invalid Password'
+    case 'auth/user-not-found': return 'No user with that email exists'
+    default:
+      return 'Error Signing In'
+  }
+}
+
 class SignInForm extends React.Component {
   constructor(props) {
     super(props)
@@ -41,10 +53,14 @@ class SignInForm extends React.Component {
     this.setState({ open: true })
   }
   handleClose() {
+    const { cancelSignInUpForm } = this.props
+    cancelSignInUpForm()
     this.setState({ open: false })
   }
   render() {
-    const { handleSubmit, error, pristine, submitting, sendSubmit, signInWithFacebook, signInWithGoogle } = this.props
+    const { account, handleSubmit, error, pristine, submitting, sendSubmit, signInWithFacebook, signInWithGoogle } = this.props
+    const socialSignInError = get(account, 'socialSignInError.code')
+    const signInError = get(account, 'signInError.code')
     const actions = [
       <div id="actionContainer">
         <FlatButton
@@ -97,6 +113,11 @@ class SignInForm extends React.Component {
                     hintText="Email"
                     floatingLabelText="Email"
                     type="email"
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                        sendSubmit()
+                      }
+                    }}
                   />
                 </div>
                 <div>
@@ -106,6 +127,11 @@ class SignInForm extends React.Component {
                     hintText="Password"
                     floatingLabelText="Password"
                     type="password"
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                        sendSubmit()
+                      }
+                    }}
                   />
                 </div>
               </form>
@@ -119,6 +145,9 @@ class SignInForm extends React.Component {
               </div>
             </div>
           </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 10, color: 'red' }}>
+            {signInError ? fireBaseErrorCode(signInError) : socialSignInError ? fireBaseErrorCode(socialSignInError) : '' }
+          </div>
         </Dialog>
       </div>
     )
@@ -126,6 +155,8 @@ class SignInForm extends React.Component {
 }
 
 SignInForm.propTypes = {
+  cancelSignInUpForm: PropTypes.func.isRequired,
+  account: PropTypes.object.isRequired,
   signInWithGoogle: PropTypes.func.isRequired,
   signInWithFacebook: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

@@ -28,6 +28,7 @@ const renderSelectField = ({
 }) => (
   <SelectField
     floatingLabelText={label}
+    floatingLabelFixed
     errorText={touched && error}
     {...input}
     onChange={(event, index, value) => input.onChange(value)}
@@ -36,7 +37,7 @@ const renderSelectField = ({
   />
 )
 
-const AddCreditForm = ({ handleSubmit, userRoles }) => (
+const AddCreditForm = ({ handleSubmit, userRoles, genres }) => (
   <form onSubmit={handleSubmit}>
     <div>
       <Field
@@ -48,6 +49,17 @@ const AddCreditForm = ({ handleSubmit, userRoles }) => (
           <MenuItem key={role.roleName} value={i} primaryText={role.roleName} />
         ))}
       </Field>
+      <div>
+        <Field
+          name="genre"
+          component={renderSelectField}
+          label="Genre"
+        >
+          {genres.map((genre, i) => (
+            <MenuItem key={genre} value={i} primaryText={genre} />
+          ))}
+        </Field>
+      </div>
       <Field
         name="title"
         component={renderTextField}
@@ -65,6 +77,7 @@ const AddCreditForm = ({ handleSubmit, userRoles }) => (
 )
 
 AddCreditForm.propTypes = {
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
   userRoles: PropTypes.arrayOf(PropTypes.shape({
     roleName: PropTypes.string,
     roleId: PropTypes.string

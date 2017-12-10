@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
 import MenuItem from 'material-ui/MenuItem'
 import TextField from 'material-ui/TextField'
+import { get } from 'lodash'
 
 // Image imports
 import LocationsImage from './location5.jpg'
@@ -74,7 +75,7 @@ const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY
 const ALGOLIA_APP_ID = process.env.REACT_APP_ALGOLIA_APP_ID
 
 const AutoCompleteBar = connectAutoComplete(
-  ({ hits, currentRefinement, refine, onUpdateInput, onSuggestionClicked }) => {
+  ({ hits, currentRefinement, refine, onUpdateInput, onSuggestionClicked, onEnterHit }) => {
     const subsetHits = hits.map(hit => ({ ...hit, hits: hit.hits.slice(0, 3) }))
     return (
       <Autosuggest
@@ -94,7 +95,15 @@ const AutoCompleteBar = connectAutoComplete(
           }
           const moreInputProps = { ...inputProps, onBlur }
           return (
-            <TextField id="autocomplete-text-field" {...moreInputProps} />
+            <TextField
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  onEnterHit()
+                }
+              }}
+              id="autocomplete-text-field"
+              {...moreInputProps}
+            />
           )
         }}
         renderSuggestion={(hit) => {
@@ -106,10 +115,10 @@ const AutoCompleteBar = connectAutoComplete(
                 {hit.roleName}
               </MenuItem>
             )
-          } else if (hit.firstName) {
+          } else if (hit.firstName || hit.lastName) {
             return (
               <MenuItem style={{ whiteSpace: 'inital' }}>
-                {`${hit.firstName} ${hit.lastName}`}
+                {`${get(hit, 'firstName', '')} ${get(hit, 'lastName', '')}`}
               </MenuItem>
             )
           } else if (hit.vendorName) {
@@ -217,6 +226,11 @@ const homePage = (props) => {
                 <Index indexName="names" />
                 <Index indexName="vendors" />
                 <AutoCompleteBar
+                  onEnterHit={() => {
+                    if (this.searchQuery) {
+                      history.push({ pathname: '/search', search: `?query=${encodeURIComponent(this.searchQuery)}&show=all` })
+                    }
+                  }}
                   onUpdateInput={query => this.searchQuery = query}
                   onSuggestionClicked={(suggestion, index) => {
                     if (index === 0) {

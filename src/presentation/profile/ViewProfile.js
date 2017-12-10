@@ -16,6 +16,32 @@ function formatPhoneNumber(s) {
   return (!m) ? null : `(${m[1]}) ${m[2]}-${m[3]}`
 }
 
+function linkToEmbed(link, type) {
+  if (link) {
+    switch (type) {
+      case 'youtube':
+        const youtubeRegExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
+        const youtubeMatch = link.match(youtubeRegExp)
+        const youtubeVideoID = youtubeMatch[7]
+
+        return `https://www.youtube.com/embed/${youtubeVideoID}`
+
+      case 'vimeo':
+        // Source: http://jsbin.com/asuqic/184/edit?html,js,output
+        const vimeoRegExp = /https?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)/
+        const vimeoMatch = link.match(vimeoRegExp)
+        const vimeoVideoID = vimeoMatch[3]
+
+        return `https://player.vimeo.com/video/${vimeoVideoID}?color=ffffff&portrait=0`
+
+      default:
+        return ''
+    }
+  } else {
+    return ''
+  }
+}
+
 class ViewProfile extends React.Component {
   render() {
     const { data, location } = this.props
@@ -50,11 +76,16 @@ class ViewProfile extends React.Component {
     const numYears = currentDate.getFullYear() - experience
     const headline = get(userProfile, 'headline')
     const video = get(userProfile, 'video', '')
+    const youtubeVideo = get(userProfile, 'youtubeVideo', '')
+    const vimeoVideo = get(userProfile, 'vimeoVideo', '')
 
     const profileImageUrl = get(userAccount, 'photoURL', defaultImage)
-    const email = get(userAccount, 'email')
     const name = `${get(userAccount, 'firstName', '')} ${get(userAccount, 'lastName', '')}`
     const phone = formatPhoneNumber(get(userAccount, 'phone'))
+
+    let email = get(userAccount, 'email')
+    const displayEmail = get(userProfile, 'displayEmail')
+    if(displayEmail) email = displayEmail 
 
     return (
       <div className="profile">
@@ -88,7 +119,7 @@ class ViewProfile extends React.Component {
           { bio || userLinks.length !== 0 ? (
             <Card className="profile-card small-card">
               <CardTitle title="About Me" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
-              <CardText>
+              <CardText style={{lineHeight: '20px'}}>
                 {bio}
               </CardText>
               <CardActions>
@@ -100,10 +131,17 @@ class ViewProfile extends React.Component {
           ) : null
           }
 
-          { video ? (
+          { youtubeVideo ? (
             <Card className="profile-card big-card">
-              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
-              <embed width="100%" height="500px" src={video} />
+              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={youtubeVideo[0].title} />
+              <embed width="100%" height="500px" src={linkToEmbed(youtubeVideo[0].url, 'youtube')} />
+            </Card>
+          ) : null}
+
+          { vimeoVideo ? (
+            <Card className="profile-card big-card">
+              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={vimeoVideo[0].title} />
+              <embed width="100%" height="500px" src={linkToEmbed(vimeoVideo[0].url, 'vimeo')} />
             </Card>
           ) : null}
 
@@ -124,7 +162,7 @@ class ViewProfile extends React.Component {
                       <div className="rounded-header"><span>{role.roleName}</span></div>
                       <div className="credits">
                         { associatedCredits.map(credit => (
-                          <p key={credit.title}>{credit.year} : {credit.title}</p>
+                          <p style={{ textAlign: 'left' }} key={credit.title}>{credit.year}{credit.genre ? ` (${credit.genre})` : ''} : {credit.title}</p>
                         )
                         )}
                       </div>
