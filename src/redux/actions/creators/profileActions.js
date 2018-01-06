@@ -1,6 +1,6 @@
 import * as firebase from 'firebase'
 import { initialize } from 'redux-form'
-import { ADD_PROFILE_LINK, EDIT_PROFILE_LINK, REMOVE_PROFILE_LINK, ADD_PROFILE_YOUTUBE_VIDEO, ADD_PROFILE_VIMEO_VIDEO, ADD_CREDIT } from '../types/profileActionTypes'
+import { ADD_PROFILE_LINK, EDIT_PROFILE_LINK, REMOVE_PROFILE_LINK, ADD_PROFILE_YOUTUBE_VIDEO, ADD_PROFILE_VIMEO_VIDEO, EDIT_PROFILE_VIDEO, REMOVE_PROFILE_VIDEO, ADD_CREDIT } from '../types/profileActionTypes'
 
 export const addLinkToProfile = (userLinks, title, url, uid) => {
   const profileRef = firebase.database().ref(`/userProfiles/${uid}`)
@@ -45,6 +45,39 @@ export const addVimeoToProfile = (vimeoVideo, title, url, uid) => {
   return {
     type: ADD_PROFILE_VIMEO_VIDEO,
     payload: profileRef.update({ vimeoVideo: newVimeoVideo })
+  }
+}
+
+export const removeVideo = (video, videoType, uid) => {
+  const profileRef = firebase.database().ref(`/userProfiles/${uid}`)
+
+  if(videoType === 1) {
+    return {
+      type: REMOVE_PROFILE_VIDEO,
+      payload: profileRef.update({ youtubeVideo : video })
+    }
+  } else {
+    return {
+      type: REMOVE_PROFILE_VIDEO,
+      payload: profileRef.update({ vimeoVideo: video })
+    }
+  }
+}
+
+export const editVideo = (video, videoType, newTitle, newUrl, uid) => {
+  const newVideo = [...video, { title: newTitle, url: newUrl }]
+  const profileRef = firebase.database().ref(`/userProfiles/${uid}`)
+ 
+  if(videoType === 1) {
+    return {
+      type: EDIT_PROFILE_VIDEO,
+      payload: profileRef.update({ youtubeVideo : newVideo })
+    }
+  } else {
+    return {
+      type: EDIT_PROFILE_VIDEO,
+      payload: profileRef.update({ vimeoVideo: newVideo })
+    }
   }
 }
 

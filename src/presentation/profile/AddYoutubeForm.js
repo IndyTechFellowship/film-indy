@@ -10,7 +10,7 @@ const validate = (values) => {
     errors.title = 'A title is required'
   }
   if (!values.url) {
-    errors.url = 'A url is required'
+    errors.url = 'A link address is required'
   }
   return errors
 }
@@ -41,7 +41,7 @@ const AddYoutubeForm = ({ handleSubmit }) => (
       <Field
         name="url"
         component={renderTextField}
-        floatingLabelText="Url"
+        floatingLabelText="Link Address"
         type="url"
       />
     </div>

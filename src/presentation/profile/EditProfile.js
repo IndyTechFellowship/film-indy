@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import { Card, CardTitle } from 'material-ui/Card'
+import { Card, CardTitle, CardHeader } from 'material-ui/Card'
 import Avatar from 'material-ui/Avatar'
 import Divider from 'material-ui/Divider'
 import Dialog from 'material-ui/Dialog'
@@ -18,6 +18,7 @@ import { get, pickBy } from 'lodash'
 import moment from 'moment'
 import AddLinkForm from './AddLinkForm'
 import EditLinkForm from './EditLinkForm'
+import EditVideoForm from './EditVideoForm'
 import AddYoutubeForm from './AddYoutubeForm'
 import AddVimeoForm from './AddVimeoForm'
 import AddCreditForm from './AddCreditForm'
@@ -73,6 +74,7 @@ class EditProfile extends React.Component {
       addCreditDialogOpen: false, 
       addYoutubeDialogOpen: false,
       addVimeoDialogOpen: false,
+      editVideoDialogOpen: false, 
     })
     this.handleClose = this.handleClose.bind(this)
     this.handleOpen = this.handleOpen.bind(this)
@@ -88,6 +90,8 @@ class EditProfile extends React.Component {
     this.handleAddYoutubeOpen = this.handleAddYoutubeOpen.bind(this)
     this.handleAddVimeoClose = this.handleAddVimeoClose.bind(this)
     this.handleAddVimeoOpen = this.handleAddVimeoOpen.bind(this)
+    this.handleEditVideoOpen = this.handleEditVideoOpen.bind(this)
+    this.handleEditVideoClose = this.handleEditVideoClose.bind(this)
     this.handleAddCreditClose = this.handleAddCreditClose.bind(this)
     this.handleAddCreditOpen = this.handleAddCreditOpen.bind(this)    
 
@@ -131,6 +135,14 @@ class EditProfile extends React.Component {
 
   handleAddVimeoOpen() {
     this.setState({ addVimeoDialogOpen: true })
+  }  
+
+  handleEditVideoOpen() {
+    this.setState({ editVideoDialogOpen: true })
+  }  
+
+  handleEditVideoClose() {
+    this.setState({ editVideoDialogOpen: false })
   }
 
   updateMessage() {
@@ -186,13 +198,14 @@ class EditProfile extends React.Component {
 
   render() {
     const { auth, profile, data, firebase, pristine, submitting,
-      handleSubmit, remoteSubmitForm, addLinkToProfile, editProfileLink, addYoutubeToProfile, addVimeoToProfile, removeProfileLink, initForm,
+      handleSubmit, remoteSubmitForm, addLinkToProfile, editProfileLink, addYoutubeToProfile, addVimeoToProfile, removeProfileLink, removeVideo, editVideo, initForm,
       addCredit } = this.props
     const uid = get(auth, 'uid', '')
     const selectedRoles = get(this.state, 'selectedRoles', [])
     const roles = get(data, 'roles', {})
     const genres = get(data, 'genres', [])
-    const userProfile = get(data, `userProfiles.${auth.uid}`)
+    const userProfile = get(data, `userProfiles.${uid}`)
+
     const userRoles = get(userProfile, 'roles', [])
       .map(roleId => ({ roleName: get(roles, `${roleId}.roleName`, ''), roleId }))
       .sort((a, b) => {
@@ -209,8 +222,11 @@ class EditProfile extends React.Component {
     const userCredits = get(userProfile, 'credits', [])
     const photoURL = get(profile, 'photoURL', '')
     const name = `${get(profile, 'firstName', '')} ${get(profile, 'lastName', '')}`
-    const youtubeVideo = get(profile, 'youtubeVideo', '')
-    const vimeoVideo = get(profile, 'vimeoVideo', '')
+    const youtubeVideo = get(userProfile, 'youtubeVideo', '')
+    const vimeoVideo = get(userProfile, 'vimeoVideo', '')
+    const video = youtubeVideo ? youtubeVideo[0] : vimeoVideo[0]
+    const videoType = youtubeVideo ? 1 : 2
+
     const possibleRolesToAdd = Object.keys(roles).reduce((acc, roleId) => {
       const roleName = get(roles, `${roleId}.roleName`, '')
       const r = userRoles.map(role => role.roleName)
@@ -315,9 +331,10 @@ class EditProfile extends React.Component {
           <Card style={styles.card}>
             <CardTitle title="Edit Profile" />
             <Divider />
+            <CardHeader style={{textAlign: 'left', left: '-100px', fontSize: '18px'}}>General</CardHeader>
             <div style={{ display: 'flex', justifyContent: 'left', paddingTop: 30 }}>
             <div>
-              <Avatar className="accountImage avatar" src={photoURL} size={150} />
+              <Avatar className="accountImage avatar" src={photoURL} size={180} style={{borderRadius: '5px'}} />
               <FlatButton className="imageText" icon={<UploadIcon />} label="Upload Picture" labelPosition="before" containerElement="label">
                 <FileUploader uid={uid} uploadFile={firebase.uploadFile} updateProfile={firebase.updateProfile} />
               </FlatButton>
@@ -371,10 +388,9 @@ class EditProfile extends React.Component {
         </div>
         <div style={{ paddingTop: 30 }}>
           <Card style={styles.card}>
-            <CardTitle title="About Me" />
-
+            <CardHeader style={{textAlign: 'left', left: '-100px', fontSize: '18px'}}>About Me</CardHeader>
             <form onSubmit={handleSubmit(this.handleProfileUpdate)}>
-              <div className="fields">
+              <div>
                 <div>
                   <Field
                     name="bio"
@@ -388,9 +404,12 @@ class EditProfile extends React.Component {
               </div>
               <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} style={{ marginBottom: '10px' }} onClick={this.updateMessage} />
             </form>
+          </Card>
+        </div>
 
-            <Divider />
-            <CardTitle title="Links" />
+        <div style={{ paddingTop: 30 }}>
+          <Card style={styles.card}>
+            <CardHeader style={{textAlign: 'left', left: '-100px', fontSize: '18px'}}>Links</CardHeader>
             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingTop: 5 }}>
               {userLinks.map((link, i) => (
                 <Chip
@@ -451,59 +470,86 @@ class EditProfile extends React.Component {
           </Card>
         </div>
 
+        {/* FEATURED VIDEO */}
         <div style={{paddingTop: '30px'}}>
           <Card style={styles.card}>
-            <CardTitle title="Featured Video" />
-            <Divider />
-            <p style={{textAlign: 'center', opacity: '0.4'}}>Where is your video?</p>
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%'}}>
-              <RaisedButton primary label="Youtube" icon={<VideoAdd />} style={{marginRight: '10px'}} onClick={this.handleAddYoutubeOpen} >
-                <Dialog
-                  title="Add a Youtube video"
-                  actions={addYoutubeActions}
-                  modal
-                  open={this.state.addYoutubeDialogOpen}
-                >
-                  <AddYoutubeForm youtubeVideo={youtubeVideo} onSubmit={values => addYoutubeToProfile(youtubeVideo, values.title, values.url, uid)} />
-                </Dialog>
-              </RaisedButton>
-              <RaisedButton primary label="Vimeo" icon={<VideoAdd />} onClick={this.handleAddVimeoOpen} >
-                <Dialog
-                  title="Add a Vimeo video"
-                  actions={addVimeoActions}
-                  modal
-                  open={this.state.addVimeoDialogOpen}
-                >
-                  <AddVimeoForm vimeoVideo={vimeoVideo} onSubmit={values => addVimeoToProfile(vimeoVideo, values.title, values.url, uid)} />
-                </Dialog>
-              </RaisedButton>
-            </div>
+            <CardHeader style={{textAlign: 'left', left: '-100px', fontSize: '18px'}}>Featured Video</CardHeader>
 
-{/*            <form>
+            { video ? ( 
+                <Chip
+                  onRequestDelete={() => {
+                    removeVideo(video, videoType, uid)
+                  }}
+                  key={video.title}
+                  onClick={() => {
+                    initForm('EditVideoForm', { title: video.title, url: video.url })
+                    this.handleEditVideoOpen()
+                  }}
+                >
+                  {video.title}
+                  <Dialog
+                    title="Edit a Video"
+                    actions={
+                      [
+                        <FlatButton
+                          label="Cancel"
+                          primary
+                          onClick={this.handleEditVideoClose}
+                        />,
+                        <FlatButton
+                          label="Submit"
+                          primary
+                          onClick={() => {
+                            remoteSubmitForm('EditVideoForm')
+                            this.handleEditVideoClose()
+                          }}
+                        />
+                      ]
+                    }
+                    modal
+                    open={this.state.editVideoDialogOpen}
+                  >
+                    <EditVideoForm
+                      onSubmit={(values) => {
+                        editVideo(video, videoType, values.title, values.url, uid)
+                      }}
+                      initialValues={{ title: video.title, url: video.url }}
+                    />
+                  </Dialog>
+                </Chip>
+              ) : (
               <div>
-                <Field
-                  name="youtubeVideo"
-                  component={renderTextField}
-                  floatingLabelText="Youtube Video Link"
-                  type="url"
-                />
-              </div>                  
-              <div>
-                <Field
-                  name="vimeoVideo"
-                  component={renderTextField}
-                  floatingLabelText="Vimeo Video Link"
-                  type="url"
-                />
-              </div>                  
-              <RaisedButton type="submit" className="accountButton" primary label="Save" disabled={pristine || submitting} style={{ marginBottom: '10px' }} onClick={this.updateMessage} />
-            </form>*/}
+                <p style={{textAlign: 'center', opacity: '0.4'}}>Where is your video?</p>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%'}}>
+                  <RaisedButton primary label="Youtube" icon={<VideoAdd />} style={{marginRight: '10px'}} onClick={this.handleAddYoutubeOpen} >
+                    <Dialog
+                      title="Add a Youtube video"
+                      actions={addYoutubeActions}
+                      modal
+                      open={this.state.addYoutubeDialogOpen}
+                    >
+                      <AddYoutubeForm youtubeVideo={youtubeVideo} onSubmit={values => addYoutubeToProfile(youtubeVideo, values.title, values.url, uid)} />
+                    </Dialog>
+                  </RaisedButton>
+                  <RaisedButton primary label="Vimeo" icon={<VideoAdd />} onClick={this.handleAddVimeoOpen} >
+                    <Dialog
+                      title="Add a Vimeo video"
+                      actions={addVimeoActions}
+                      modal
+                      open={this.state.addVimeoDialogOpen}
+                    >
+                      <AddVimeoForm vimeoVideo={vimeoVideo} onSubmit={values => addVimeoToProfile(vimeoVideo, values.title, values.url, uid)} />
+                    </Dialog>
+                  </RaisedButton>
+                </div>
+              </div> )
+            }
           </Card>
         </div>
 
-        <div style={{ paddingTop: 30 }}>
+        <div style={{ paddingTop: 30, marginBottom: 50 }}>
           <Card className="profile-card big-card" style={styles.card}>
-            <CardTitle title="Roles" />
+            <CardHeader style={{textAlign: 'left', left: '-100px', fontSize: '18px'}}>Roles</CardHeader>
             <Divider />
             <div className="roles" style={{ paddingTop: 10 }}>
               {
@@ -635,8 +681,10 @@ EditProfile.propTypes = {
   addYoutubeToProfile: PropTypes.func.isRequired,
   addVimeoToProfile: PropTypes.func.isRequired,
   removeProfileLink: PropTypes.func.isRequired,
+  removeVideo: PropTypes.func.isRequired,
   addCredit: PropTypes.func.isRequired,
   editProfileLink: PropTypes.func.isRequired,
+  editVideo: PropTypes.func.isRequired,
   remoteSubmitForm: PropTypes.func.isRequired,
   initForm: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired

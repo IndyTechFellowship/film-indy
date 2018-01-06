@@ -10,7 +10,7 @@ const validate = (values) => {
     errors.title = 'A title is required'
   }
   if (!values.url) {
-    errors.url = 'A link address is required'
+    errors.url = 'A url is required'
   }
   return errors
 }
@@ -29,7 +29,7 @@ const renderTextField = ({ input, name, label, meta: { touched, error }, ...cust
   />
 )
 
-const AddVimeoForm = ({ handleSubmit }) => (
+const EditVideoForm = ({ handleSubmit }) => (
   <form onSubmit={handleSubmit}>
     <div>
       <Field
@@ -41,19 +41,18 @@ const AddVimeoForm = ({ handleSubmit }) => (
       <Field
         name="url"
         component={renderTextField}
-        floatingLabelText="Link Address"
+        floatingLabelText="Url"
         type="url"
       />
     </div>
   </form>
 )
 
-AddVimeoForm.propTypes = {
+EditVideoForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired
 }
 
 export default reduxForm({
-  form: 'AddVimeoForm',
+  form: 'EditVideoForm',
   validate
-})(AddVimeoForm)
-
+})(EditVideoForm)

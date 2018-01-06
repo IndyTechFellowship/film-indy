@@ -2,7 +2,7 @@ import React from 'react'
 import QueryString from 'query-string'
 import { Card, CardMedia, CardText, CardTitle, CardActions } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import WebsiteIcon from 'material-ui/svg-icons/hardware/laptop-mac'
+import LinkIcon from 'material-ui/svg-icons/content/link'
 import { get } from 'lodash'
 import PropTypes from 'prop-types'
 import '../../App.css'
@@ -19,14 +19,14 @@ function formatPhoneNumber(s) {
 function linkToEmbed(link, type) {
   if (link) {
     switch (type) {
-      case 'youtube':
+      case 1:
         const youtubeRegExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
         const youtubeMatch = link.match(youtubeRegExp)
         const youtubeVideoID = youtubeMatch[7]
 
         return `https://www.youtube.com/embed/${youtubeVideoID}`
 
-      case 'vimeo':
+      case 2:
         // Source: http://jsbin.com/asuqic/184/edit?html,js,output
         const vimeoRegExp = /https?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)/
         const vimeoMatch = link.match(vimeoRegExp)
@@ -45,6 +45,7 @@ function linkToEmbed(link, type) {
 class ViewProfile extends React.Component {
   render() {
     const { data, location } = this.props
+
 
     // gets uid of current public profile from URL
     const parsed = QueryString.parse(location.search)
@@ -77,6 +78,8 @@ class ViewProfile extends React.Component {
     const headline = get(userProfile, 'headline')
     const youtubeVideo = get(userProfile, 'youtubeVideo', '')
     const vimeoVideo = get(userProfile, 'vimeoVideo', '')
+    const video = youtubeVideo ? youtubeVideo[0] : vimeoVideo[0]
+    const videoType = youtubeVideo ? 1 : 2
 
     const profileImageUrl = get(userAccount, 'photoURL', defaultImage)
     const name = `${get(userAccount, 'firstName', '')} ${get(userAccount, 'lastName', '')}`
@@ -85,6 +88,9 @@ class ViewProfile extends React.Component {
     let email = get(userAccount, 'email')
     const displayEmail = get(userProfile, 'displayEmail')
     if(displayEmail) email = displayEmail 
+
+    console.log("YT: ", youtubeVideo)
+
 
     return (
       <div className="profile">
@@ -123,26 +129,21 @@ class ViewProfile extends React.Component {
               </CardText>
               <CardActions>
                 {userLinks.map(link => (
-                  <RaisedButton primary label={link.title} target="_blank" href={link.url} icon={<WebsiteIcon />} />
+                  <RaisedButton primary label={link.title} target="_blank" href={link.url} icon={<LinkIcon />} />
                 ))}
               </CardActions>
             </Card>
           ) : null
           }
 
-          { youtubeVideo ? (
+          { video ? (
             <Card className="profile-card big-card">
-              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={youtubeVideo[0].title} />
-              <embed width="100%" height="500px" src={linkToEmbed(youtubeVideo[0].url, 'youtube')} />
+              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={video.title} />
+              <embed width="100%" height="500px" src={linkToEmbed(video.url, videoType)} />
             </Card>
           ) : null}
 
-          { vimeoVideo ? (
-            <Card className="profile-card big-card">
-              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={vimeoVideo[0].title} />
-              <embed width="100%" height="500px" src={linkToEmbed(vimeoVideo[0].url, 'vimeo')} />
-            </Card>
-          ) : null}
+
 
           <Card className="profile-card big-card">
             <CardTitle title="Credits" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
