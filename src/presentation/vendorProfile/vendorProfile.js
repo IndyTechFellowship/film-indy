@@ -2,7 +2,6 @@ import React from 'react'
 import { get } from 'lodash'
 import { Card, CardMedia, CardText, CardTitle } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import './vendorProfile.css'
 
 const defaultImage = 'http://sunfieldfarm.org/wp-content/uploads/2014/02/profile-placeholder.png'
 
