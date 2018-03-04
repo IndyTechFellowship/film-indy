@@ -3,8 +3,18 @@
 	margin-top: 25px;
 }
 
-.crew-image {
+.crew-image-container {
 	height: 100%;
+}
+
+.crew-image {
+  width: 250px !important;
+  height: 250px !important;
+  object-fit: cover !important;
+  border-bottom-left-radius: 2px !important;
+  border-top-left-radius: 2px !important;
+  min-width: 250px !important;
+  min-height: 250px !important;
 }
 
 .crew-headline {
@@ -13,15 +23,17 @@
 
 .crew-text {
 	font-weight: 400;
-	min-width: 100%;
+	min-width: 200% !important;
 	margin-top: -10px;
 }
 
 .profile-card {
-	width: 50%;
-	border-radius: 2;
-	margin: auto;
-	margin-bottom: 1%;
+  width: 50% !important;
+  height: auto !important;
+  margin-top: 1em !important;
+  display: block !important;
+  margin: auto !important;
+  padding: 1em !important;
 }
 
 .small-card, .top-card {
@@ -74,4 +86,25 @@
 	margin-left: 20px;
 	border-left: 2px solid rgb(0, 75, 141);
 	padding-left: 10px;
+}
+
+@media (max-width: 775px) {
+  .profile-card {
+  	width: 100% !important;
+    height: auto !important;
+    margin-top: 1em !important;
+    display: block !important;
+    margin: auto !important;
+    padding: 1em !important;
+  }
+
+  .crew-image {
+    width: 150px !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-bottom-left-radius: 2px !important;
+    border-top-left-radius: 2px !important;
+    min-width: 150px !important;
+    min-height: 150px !important;
+  }
 }

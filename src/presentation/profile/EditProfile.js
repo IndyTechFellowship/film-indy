@@ -30,19 +30,6 @@ import AddVideoForm from './AddVideoForm'
 import '../../App.css'
 import '../../presentation/profile/ViewProfile.css'
 
-const styles = {
-  card: {
-    width: '40%',
-    height: 'auto',
-    marginTop: '1em',
-    display: 'block',
-    margin: 'auto',
-    padding: '1em'
-  },
-  chipStyle: {
-    margin: 6
-  }
-}
 const FileUploader = props => (
   <input
     name="myFile"
@@ -265,7 +252,7 @@ class EditProfile extends React.Component {
     const isPublic = get(profile, 'public', false)
     const video = get(userProfile, 'video', '')[0]
     let videoType = 0
-    if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo 
+    if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo
 
     const addYoutubeActions = [
       <FlatButton
@@ -361,7 +348,7 @@ class EditProfile extends React.Component {
           </Link>
         </div>
         <div style={{ paddingTop: 30 }}>
-          <Card style={styles.card}>
+          <Card className="profile-card">
             <div className="toggleContainer">
               <div className="toggle">
                 <Toggle
@@ -375,14 +362,14 @@ class EditProfile extends React.Component {
                   }}
                 />
               </div>
-              <div>
+              <div style={{ marginLeft: 30 }}>
             Just here to search? Turn your profile to "Private" to not appear in other's searches.
               </div>
             </div>
           </Card>
         </div>
         <div style={{ display: 'flex', marginTop: 30 }}>
-          <Card style={styles.card}>
+          <Card className="profile-card">
             <CardTitle style={{ textAlign: 'left' }}title="General" />
             <div style={{ display: 'flex', justifyContent: 'left', paddingTop: 30 }}>
               <div>
@@ -454,7 +441,7 @@ class EditProfile extends React.Component {
           </Card>
         </div>
         <div style={{ paddingTop: 30 }}>
-          <Card style={styles.card}>
+          <Card className="profile-card">
             <CardTitle style={{ textAlign: 'left' }} title="About Me" />
             <form onSubmit={handleSubmit(this.handleProfileUpdate)}>
               <div>
@@ -484,7 +471,7 @@ class EditProfile extends React.Component {
           </Card>
         </div>
         <div style={{ paddingTop: 30 }}>
-          <Card className="profile-card big-card" style={styles.card}>
+          <Card className="profile-card big-card">
             <CardTitle title="Links" style={{ textAlign: 'left' }} />
             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingTop: 5 }}>
               {userLinks.map((link, i) => (
@@ -561,7 +548,7 @@ class EditProfile extends React.Component {
         </div>
 
         <div style={{ paddingTop: 30 }}>
-          <Card className="profile-card big-card" style={styles.card}>
+          <Card className="profile-card big-card">
             <CardTitle style={{ textAlign: 'left' }} title="Featured Video" />
             { video ? (
               <RaisedButton
@@ -654,7 +641,7 @@ class EditProfile extends React.Component {
         </div>
 
         <div style={{ paddingTop: 30 }}>
-          <Card className="profile-card big-card" style={styles.card}>
+          <Card className="profile-card big-card" >
             <CardTitle style={{ textAlign: 'left' }} title="Credits" />
             <div className="roles" style={{ paddingTop: 10 }}>
               {

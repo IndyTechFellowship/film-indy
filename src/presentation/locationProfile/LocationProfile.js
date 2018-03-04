@@ -63,7 +63,7 @@ const LocationProfilePage = (props) => {
       <div>
         {
           locationCreator === uid ? (
-            <div style={{ textAlign: 'right', marginRight: 20, marginTop: 10 }}>
+            <div style={{ textAlign: 'right', marginRight: 20, marginTop: 10, marginBottom: 20 }}>
               <Link to={`/location/${locationId}/edit`}>
                 <RaisedButton label="Edit Location" icon={<ModeEditIcon />} />
               </Link>
@@ -110,7 +110,7 @@ const LocationProfilePage = (props) => {
           </div>
         </Card>
 
-        <Card className="profile-card big-card location-bio" containerStyle={{ width: '95%', paddingBottom: 0, display: 'flex', flexDirection: 'row', textAlign: 'left' }}>
+        <Card className="profile-card location-bio" containerStyle={{ width: '95%', paddingBottom: 0, display: 'flex', flexDirection: 'row', textAlign: 'left' }}>
           <div>
             <CardTitle title={'About Us'} titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
             { locationBio ? (
@@ -133,7 +133,7 @@ const LocationProfilePage = (props) => {
         </Card>
 
         { video ? (
-          <Card className="profile-card big-card">
+          <Card className="profile-card">
             <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={video.title} />
             <embed width="100%" height="500px" src={linkToEmbed(video.url, videoType)} />
           </Card>

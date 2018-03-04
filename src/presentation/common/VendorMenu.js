@@ -3,8 +3,11 @@ import PropTypes from 'prop-types'
 import MenuItem from 'material-ui/MenuItem'
 import { Link } from 'react-router-dom'
 import ArrowDropLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import Add from 'material-ui/svg-icons/content/add'
 import Popover from 'material-ui/Popover'
 import Menu from 'material-ui/Menu'
+import './LocationMenu.css'
+
 
 class VendorMenu extends React.Component {
   constructor(props) {
@@ -41,6 +44,11 @@ class VendorMenu extends React.Component {
         <Link onClick={closeDropdown} to={`/vendor/${key}`}> <MenuItem primaryText={location.name} /> </Link>
       )
     })
+
+    const width = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth
+
     return (
       <div>
         <div
@@ -54,18 +62,34 @@ class VendorMenu extends React.Component {
             Vendors
           </div>
         </div>
-        <Popover
-          open={this.state.open}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-          onRequestClose={this.handleRequestClose}
-        >
-          <Menu>
-            {menuItems}
-            <MenuItem primaryText="Add Location" onClick={onAddVendorClick} />
-          </Menu>
-        </Popover>
+        { width > 450 && (
+          <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              {menuItems}
+              <MenuItem primaryText="Add Vendor" leftIcon={<Add />} onClick={onAddVendorClick} />
+            </Menu>
+          </Popover>
+        )}
+        { width <= 450 && (
+          <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              {menuItems}
+              <MenuItem primaryText="Add Vendor" leftIcon={<Add />} onClick={onAddVendorClick} />
+            </Menu>
+          </Popover>
+        )}
       </div>
     )
   }

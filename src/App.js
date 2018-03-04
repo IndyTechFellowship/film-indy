@@ -8,6 +8,7 @@ import { InstantSearch, Index, Configure, CurrentRefinements } from 'react-insta
 import { connectAutoComplete, connectMenu } from 'react-instantsearch/connectors'
 import Autosuggest from 'react-autosuggest'
 import QueryString from 'query-string'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import 'react-instantsearch-theme-algolia/style.css'
 
 // Material UI Components
@@ -264,159 +265,177 @@ class App extends React.Component {
     const appBarStyle = location.pathname === '/search' ? { boxShadow: 'none' } : {}
     return (
       <div className="App">
-        <AppBar
-          style={{ ...appBarStyle }}
-          iconElementLeft={
-            <div className="dhjkaf"style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <Link to="/"><img src={Logo} className="logo" alt="Film Indy Logo" /></Link>
-                { location.pathname !== '/' &&
-                <Card className="menuSearchCard" style={{ width: 420 }}>
-                  <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <SearchIcon className="searchIcon" />
-                    <InstantSearch
-                      appId={ALGOLIA_APP_ID}
-                      apiKey={ALGOLIA_SEARCH_KEY}
-                      indexName="roles"
-                    >
-                      <Index indexName="names">
-                        <Configure />
-                        <CurrentRefinements
-                          transformItems={items => items.filter(item => item.public === 'true' || item.public === 'false')}
-                        />
-                        <VirtualMenu attributeName="public" defaultRefinement={'true'} />
-                      </Index>
-                      <Index indexName="vendors">
-                        <Configure />
-                        <CurrentRefinements
-                          transformItems={items => items.filter(item => item.public === 'true' || item.public === 'false')}
-                        />
-                        <VirtualMenu attributeName="public" defaultRefinement={'true'} />
-                      </Index>
-                      <Index indexName="locations">
-                        <Configure />
-                        <CurrentRefinements
-                          transformItems={items => items.filter(item => item.public === 'true' || item.public === 'false')}
-                        />
-                        <VirtualMenu attributeName="public" defaultRefinement={'true'} />
-                      </Index>
-                      <Index indexName="locationTypes" />
-                      <AutoCompleteBar
-                        onUpdateInput={query => this.searchQuery = query}
-                        onEnterHit={() => {
-                          if (this.searchQuery) {
-                            history.push({ pathname: '/search', search: `?query=${encodeURIComponent(this.searchQuery)}&show=all` })
-                          }
-                        }}
-                        onSuggestionClicked={(suggestion, index) => {
-                          if (index === 0) {
-                            history.push({ pathname: '/search', search: `?query=${encodeURIComponent(suggestion.roleName)}&show=all&role=${encodeURIComponent(suggestion.roleName)}` })
-                          } else if (index === 1) {
-                            history.push({ pathname: '/profile', search: `?query=${encodeURIComponent(suggestion.objectID)}` })
-                          } else if (index === 2) {
-                            history.push({ pathname: `/vendor/${suggestion.objectID}` })
-                          } else if (index === 3) {
-                            history.push({ pathname: `/location/${suggestion.objectID}` })
-                          } else if (index === 4) {
-                            history.push({ pathname: '/search', search: `?query=''&show=locations&locationType=${encodeURIComponent(suggestion.type)}` })
-                          }
+        <Grid fluid style={{ padding: 0 }}>
+          <AppBar
+            style={{ ...appBarStyle }}
+            iconElementLeft={
+              <div>
+                <Row>
+                  <Col xs>
+                    <Link to="/"><img src={Logo} className="logo" alt="Film Indy Logo" /></Link>
+                  </Col>
+                  { location.pathname !== '/' &&
+                    <Col xs>
+                      <Card className="menuSearchCard">
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                          <SearchIcon className="searchIcon" />
+                          <InstantSearch
+                            appId={ALGOLIA_APP_ID}
+                            apiKey={ALGOLIA_SEARCH_KEY}
+                            indexName="roles"
+                          >
+                            <Index indexName="names">
+                              <Configure />
+                              <CurrentRefinements
+                                transformItems={items => items.filter(item => item.public === 'true' || item.public === 'false')}
+                              />
+                              <VirtualMenu attributeName="public" defaultRefinement={'true'} />
+                            </Index>
+                            <Index indexName="vendors">
+                              <Configure />
+                              <CurrentRefinements
+                                transformItems={items => items.filter(item => item.public === 'true' || item.public === 'false')}
+                              />
+                              <VirtualMenu attributeName="public" defaultRefinement={'true'} />
+                            </Index>
+                            <Index indexName="locations">
+                              <Configure />
+                              <CurrentRefinements
+                                transformItems={items => items.filter(item => item.public === 'true' || item.public === 'false')}
+                              />
+                              <VirtualMenu attributeName="public" defaultRefinement={'true'} />
+                            </Index>
+                            <Index indexName="locationTypes" />
+                            <AutoCompleteBar
+                              onUpdateInput={query => this.searchQuery = query}
+                              onEnterHit={() => {
+                                if (this.searchQuery) {
+                                  history.push({ pathname: '/search', search: `?query=${encodeURIComponent(this.searchQuery)}&show=all` })
+                                }
+                              }}
+                              onSuggestionClicked={(suggestion, index) => {
+                                if (index === 0) {
+                                  history.push({ pathname: '/search', search: `?query=${encodeURIComponent(suggestion.roleName)}&show=all&role=${encodeURIComponent(suggestion.roleName)}` })
+                                } else if (index === 1) {
+                                  history.push({ pathname: '/profile', search: `?query=${encodeURIComponent(suggestion.objectID)}` })
+                                } else if (index === 2) {
+                                  history.push({ pathname: `/vendor/${suggestion.objectID}` })
+                                } else if (index === 3) {
+                                  history.push({ pathname: `/location/${suggestion.objectID}` })
+                                } else if (index === 4) {
+                                  history.push({ pathname: '/search', search: `?query=''&show=locations&locationType=${encodeURIComponent(suggestion.type)}` })
+                                }
+                              }}
+                            />
+                          </InstantSearch>
+                          <RaisedButton
+                            label="Search"
+                            labelColor="#fff"
+                            backgroundColor={'#02BDF2'}
+                            className="searchButton"
+                            onClick={() => {
+                              if (this.searchQuery) {
+                                history.push({ pathname: '/search', search: `?query=${encodeURIComponent(this.searchQuery)}&show=all` })
+                              } else {
+                                history.push({ pathname: '/search', search: `?query=${encodeURIComponent('')}&show=all` })
+                              }
+                            }}
+                          />
+                        </div>
+                      </Card>
+                    </Col>
+                  }
+                </Row>
+                { location.pathname === '/search' ?
+                  (
+                    <Tabs tabItemContainerStyle={{ width: '100%' }} value={showOnly}>
+                      <Tab
+                        style={{ zIndex: 0 }}
+                        label="All"
+                        value="all"
+                        onActive={() => {
+                          const newQs = QueryString.stringify({ ...parsed, show: 'all' })
+                          history.push({ pathname: '/search', search: newQs })
                         }}
                       />
-                    </InstantSearch>
-                    <RaisedButton
-                      label="Search"
-                      labelColor="#fff"
-                      backgroundColor={'#02BDF2'}
-                      style={{ height: 30, marginTop: 10, marginLeft: 30 }}
-                      onClick={() => {
-                        if (this.searchQuery) {
-                          history.push({ pathname: '/search', search: `?query=${encodeURIComponent(this.searchQuery)}&show=all` })
-                        } else {
-                          history.push({ pathname: '/search', search: `?query=${encodeURIComponent('')}&show=all` })
-                        }
-                      }}
-                    />
-                  </div>
-                </Card>
-                }
+                      <Tab
+                        style={{ zIndex: 0 }}
+                        label="Crew"
+                        value="crew"
+                        onActive={() => {
+                          const newQs = QueryString.stringify({ ...parsed, show: 'crew' })
+                          history.push({ pathname: '/search', search: newQs })
+                        }}
+                      />
+                      <Tab
+                        style={{ zIndex: 0 }}
+                        label="Vendors"
+                        value="vendors"
+                        onActive={() => {
+                          const newQs = QueryString.stringify({ ...parsed, show: 'vendors' })
+                          history.push({ pathname: '/search', search: newQs })
+                        }}
+                      />
+                      <Tab
+                        style={{ zIndex: 0 }}
+                        label="Locations"
+                        value="locations"
+                        onActive={() => {
+                          const newQs = QueryString.stringify({ ...parsed, show: 'locations' })
+                          history.push({ pathname: '/search', search: newQs })
+                        }}
+                      />
+                    </Tabs>
+
+                  ) : null }
               </div>
-              {location.pathname === '/search' ?
-                (<Tabs tabItemContainerStyle={{ width: '100%' }} style={{ marginLeft: 200 }} value={showOnly}>
-                  <Tab
-                    style={{ zIndex: 0 }}
-                    label="All"
-                    value="all"
-                    onActive={() => {
-                      const newQs = QueryString.stringify({ ...parsed, show: 'all' })
-                      history.push({ pathname: '/search', search: newQs })
-                    }}
-                  />
-                  <Tab
-                    style={{ zIndex: 0 }}
-                    label="Crew"
-                    value="crew"
-                    onActive={() => {
-                      const newQs = QueryString.stringify({ ...parsed, show: 'crew' })
-                      history.push({ pathname: '/search', search: newQs })
-                    }}
-                  />
-                  <Tab
-                    style={{ zIndex: 0 }}
-                    label="Vendors"
-                    value="vendors"
-                    onActive={() => {
-                      const newQs = QueryString.stringify({ ...parsed, show: 'vendors' })
-                      history.push({ pathname: '/search', search: newQs })
-                    }}
-                  />
-                  <Tab
-                    style={{ zIndex: 0 }}
-                    label="Locations"
-                    value="locations"
-                    onActive={() => {
-                      const newQs = QueryString.stringify({ ...parsed, show: 'locations' })
-                      history.push({ pathname: '/search', search: newQs })
-                    }}
-                  />
-                </Tabs>) : null}
-            </div>
-          }
-          iconElementRight={uid ? (
-            <div className="avatar-wrapper" onClick={this.handleAvatarTouch}>
-              <Avatar className="accountIcon avatar" src={photoURL} size={60} />
-              <ArrowIcon className="arrowIcon" />
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'row', marginTop: 35 }}>
-              <SignUpForm
-                browser={browser}
-                onSubmit={(values) => {
-                  const photoFile = values.photoFile || values.avatar
-                  signUp(values.firstName, values.lastName, photoFile, values.email, values.password)
-                }}
-                getDefaultAccountImages={getDefaultAccountImages}
-                defaultAccountImages={account.defaultAccountImages}
-                account={account}
-                cancelSignInUpForm={cancelSignInUpForm}
-                signUpWithGoogle={signUpWithGoogle}
-                signUpWithFacebook={signUpWithFacebook}
-                sendSubmit={submitSignUp}
-              />
-              <SignInForm
-                browser={browser}
-                onSubmit={(values) => {
-                  signIn(values.email, values.password)
-                }}
-                account={account}
-                cancelSignInUpForm={cancelSignInUpForm}
-                signInWithFacebook={signInWithFacebook}
-                signInWithGoogle={signInWithGoogle}
-                sendSubmit={submitSignIn}
-              />
-            </div>
-          )}
-          zDepth={2}
-        />
+            }
+            iconElementRight={uid ? (
+              <Col xs>
+                <div className="avatar-wrapper" onClick={this.handleAvatarTouch}>
+                  <Avatar className="accountIcon avatar" src={photoURL} />
+                  <ArrowIcon className="arrowIcon" />
+                </div>
+              </Col>
+            ) : (
+              <Col xs>
+                <Row>
+                  <div style={{ display: 'flex', flexDirection: 'row', marginTop: 35 }}>
+                    <Col xs>
+                      <SignUpForm
+                        onSubmit={(values) => {
+                          const photoFile = values.photoFile || values.avatar
+                          signUp(values.firstName, values.lastName, photoFile, values.email, values.password)
+                        }}
+                        getDefaultAccountImages={getDefaultAccountImages}
+                        defaultAccountImages={account.defaultAccountImages}
+                        account={account}
+                        cancelSignInUpForm={cancelSignInUpForm}
+                        signUpWithGoogle={signUpWithGoogle}
+                        signUpWithFacebook={signUpWithFacebook}
+                        sendSubmit={submitSignUp}
+                      />
+                    </Col>
+                    <Col xs>
+                      <SignInForm
+                        onSubmit={(values) => {
+                          signIn(values.email, values.password)
+                        }}
+                        account={account}
+                        cancelSignInUpForm={cancelSignInUpForm}
+                        signInWithFacebook={signInWithFacebook}
+                        signInWithGoogle={signInWithGoogle}
+                        sendSubmit={submitSignIn}
+                      />
+                    </Col>
+                  </div>
+                </Row>
+              </Col>
+            )}
+            zDepth={2}
+          />
+        </Grid>
+
         <AddVendorModal
           open={addVendorModalOpen}
           onCancel={() => {
@@ -451,8 +470,14 @@ class App extends React.Component {
           <Menu >
             { uid ? ( // renders dropdown items depending on if logged in
               <div>
-                <Link onClick={this.handleDropdownClose} to="/account"><MenuItem primaryText="Account Settings" leftIcon={<AccountCircle />} /></Link>
-                <Link onClick={this.handleDropdownClose} to={{ pathname: '/profile', search: `?query=${uid}` }}><MenuItem primaryText="View Profile" leftIcon={<ViewIcon />} /></Link>
+                <Link onClick={this.handleDropdownClose} to="/account">
+                  <MenuItem primaryText="Account Settings" leftIcon={<AccountCircle />} />
+                </Link>
+
+                <Link onClick={this.handleDropdownClose} to={{ pathname: '/profile', search: `?query=${uid}` }}>
+                  <MenuItem primaryText="View Profile" leftIcon={<ViewIcon />} />
+                </Link>
+
                 <VendorMenu
                   closeDropdown={this.handleDropdownClose}
                   vendors={usersVendors}
@@ -461,6 +486,7 @@ class App extends React.Component {
                     this.setState({ addVendorModalOpen: true })
                   }}
                 />
+
                 <LocationMenu
                   showSubMenu={showSubMenu}
                   onClickSubMenu={() => this.setState({ showSubMenu: true })}
@@ -472,6 +498,7 @@ class App extends React.Component {
                   }}
                 />
                 <MenuItem primaryText="Log Out" leftIcon={<LogoutIcon />} onClick={(e) => { firebase.logout(); this.signOutMessage() }} />
+
               </div>
             ) : (
               <div />

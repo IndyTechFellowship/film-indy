@@ -60,7 +60,7 @@ const VendorProfilePage = (props) => {
 
   const video = get(vendorProfile, 'video', '')[0]
   let videoType = 0
-  if(video) videoType = video.url.indexOf("youtube") > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo
+  if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo
 
   const vendorAddressLine1 = get(vendorProfile, 'addressLine1', '')
   const vendorAddressLine2 = get(vendorProfile, 'addressLine2', '')
@@ -85,7 +85,7 @@ const VendorProfilePage = (props) => {
       <div>
         {
           vendorCreator === uid ? (
-            <div style={{ textAlign: 'right', marginRight: 20, marginTop: 10 }}>
+            <div style={{ textAlign: 'right', marginRight: 20, marginTop: 10, marginBottom: 10 }}>
               <Link to={`/vendor/${vendorId}/edit`}>
                 <RaisedButton label="Edit Vendor" icon={<ModeEditIcon />} />
               </Link>
@@ -93,8 +93,8 @@ const VendorProfilePage = (props) => {
           ) : null
         }
         <Card className="profile-card vendor-profile" containerStyle={{ paddingBottom: 0, display: 'flex', flexDirection: 'row', textAlign: 'left' }}>
-          <CardMedia className="crew-image">
-            <img src={profileImageUrl} alt="" style={{ width: 250, height: 250, objectFit: 'cover', borderBottomLeftRadius: 2, borderTopLeftRadius: 2, minWidth: 250, minHeight: 250 }} />
+          <CardMedia className="crew-image-container">
+            <img src={profileImageUrl} className="crew-image" alt="" />
           </CardMedia>
           <div style={{ minWidth: '200px', width: '100%' }}>
             <CardTitle title={vendorName} titleStyle={{ fontWeight: 500, fontSize: '20px' }} />

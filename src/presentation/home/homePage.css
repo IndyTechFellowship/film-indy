@@ -30,7 +30,7 @@
 	color: #38b5e6;
 	color: #004b8d;
 	font-size: 28pt;
-	font-weight: 600; 
+	font-weight: 600;
 	margin: auto;
 	text-align: left;
 }
@@ -39,7 +39,7 @@
 	color: #38b5e6;
 	color: #004b8d;
 	font-size: 24pt;
-	font-weight: 600; 
+	font-weight: 600;
 	margin: auto;
 	text-align: center;
 }
@@ -51,11 +51,18 @@
 }
 
 .searchCard {
+  width: auto;
 	position: relative;
 	display: block !important;
 	margin: auto !important;
 	margin-top: 10px !important;
 	margin-bottom: 25px !important;
+}
+
+.searchCard div, .searchCard input {
+  display: block;
+  margin: auto;
+  width: 100% !important;
 }
 
 .searchIcon {
@@ -148,4 +155,30 @@
 	color: #38b5e6;
 }
 
+@media (max-width: 775px) {
+  .bg-image {
+  	position: relative;
+  	top: -100px;
+    padding-top: 100px;
+  	width: 100%;
+  	height: 55%;
+  	background: url('./bg2.jpg');
+  	background-size: cover;
+    background-position: center bottom;
+  }
 
+  .main-header {
+    text-align: center;
+  }
+
+  .header-wrapper {
+    width: 100%;
+    top: 35%;
+    text-align: center;
+  }
+
+  .category-card {
+  	margin: 10px;
+  	cursor: pointer;
+  }
+}

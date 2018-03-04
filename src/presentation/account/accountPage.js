@@ -143,15 +143,15 @@ class AccountPage extends React.Component {
           </div>
         ) : null}
         <h2 className="resetHeader">Vendors</h2>
-        <Card className="passwordCard">
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <Card className="addCard">
+          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
             {Object.keys(vendors).map((key) => {
               const vend = vendors[key]
               return (
                 <Chip
                   onRequestDelete={() => deleteVendor(key)}
                   key={vend.name}
-                  style={{ marginRight: 5 }}
+                  style={{ marginRight: 5, marginBottom: 10 }}
                 >
                   {vend.name}
                 </Chip>
@@ -168,28 +168,28 @@ class AccountPage extends React.Component {
               createVendor(values.name)
             }}
           />
-          </Card>
+        </Card>
 
-          <h2 className="resetHeader">Locations</h2>
-          <Card className="passwordCard">
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              {Object.keys(locations).map((key) => {
-                const loc = locations[key]
-                return (
-                  <Chip
-                    onRequestDelete={() => deleteLocation(key)}
-                    key={loc.name}
-                    style={{ marginRight: 5 }}
-                  >
-                    {loc.name}
-                  </Chip>
-                )
-              })}
-              {Object.keys(locations).length === 0 ?
-                'Press Add to create a Location'
-                : null
-              }
-            </div>
+        <h2 className="resetHeader">Locations</h2>
+        <Card className="addCard">
+          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+            {Object.keys(locations).map((key) => {
+              const loc = locations[key]
+              return (
+                <Chip
+                  onRequestDelete={() => deleteLocation(key)}
+                  key={loc.name}
+                  style={{ marginRight: 5, marginBottom: 10 }}
+                >
+                  {loc.name}
+                </Chip>
+              )
+            })}
+            {Object.keys(locations).length === 0 ?
+              'Press Add to create a Location'
+              : null
+            }
+          </div>
           <LocationCreateModal
             submitLocationCreate={submitLocationCreate}
             onSubmit={(values) => {

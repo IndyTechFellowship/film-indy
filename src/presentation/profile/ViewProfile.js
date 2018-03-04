@@ -7,6 +7,7 @@ import ModeEditIcon from 'material-ui/svg-icons/editor/mode-edit'
 import { get } from 'lodash'
 import PropTypes from 'prop-types'
 import formatLink from '../../util/formatLink'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import '../../App.css'
 import './ViewProfile.css'
 
@@ -86,103 +87,178 @@ class ViewProfile extends React.Component {
     const name = `${get(userAccount, 'firstName', '')} ${get(userAccount, 'lastName', '')}`
     const phone = formatPhoneNumber(get(userAccount, 'phone'))
 
-    const email = get(userProfile, 'displayEmail') ? userProfile.displayEmail : get(data, 'auth.email')
+    const email = get(userProfile, 'displayEmail') ? userProfile.displayEmail : get(auth, 'email')
     return (
-      <div className="profile">
-        {
-          authorizedUid === uid ? (
-            <div style={{ textAlign: 'right', marginRight: 20, marginTop: 10 }}>
-              <Link to="/profile/edit">
-                <RaisedButton label="Edit Profile" icon={<ModeEditIcon />} />
-              </Link>
-            </div>
-          ) : null
-        }
-        <div style={{ display: 'block', margin: 'auto' }}>
-          <Card className="profile-card top-card" containerStyle={{ width: '50%', paddingBottom: 0, display: 'flex', flexDirection: 'row' }}>
-            <CardMedia className="crew-image">
-              <img src={profileImageUrl} alt="" style={{ width: 250, height: 250, objectFit: 'cover', borderBottomLeftRadius: 2, borderTopLeftRadius: 2, minWidth: 250, minHeight: 250 }} />
-            </CardMedia>
-            <div>
-              <CardTitle title={name} titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={headline} subtitleStyle={{ minWidth: '250%', fontStyle: 'italic' }} />
-              { isNaN(numYears) ?
-                null
-                : (
-                  <CardText className="crew-text">
-                    {numYears} year(s) in industry
-                  </CardText>
-                )
-              }
-              { phone ? (
-                <CardText className="crew-text">
-                  {phone}
-                </CardText>
-              ) : null
-              }
-              <CardText className="crew-text">
-                {email}
-              </CardText>
-            </div>
-          </Card>
-
-          <Card className="profile-card small-card">
-            <CardTitle title="About Me" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
-
-            { bio ? (
-              <CardText style={{ lineHeight: '20px', paddingBottom: '40px' }}>
-                {bio}
-              </CardText>
-            ) : (
-              <CardText style={{ paddingBottom: '48px' }}>
-                Contact me directly for more information.
-              </CardText>
-            )
-            }
-
-            <CardActions >
-              {userLinks.map(link => (
-                <RaisedButton primary key={link.title} label={link.title} target="_blank" href={formatLink(link.url)} />
-              ))}
-            </CardActions>
-          </Card>
-
-          { video ? (
-            <Card className="profile-card big-card">
-              <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={video.title} />
-              <embed width="100%" height="500px" src={linkToEmbed(video.url, videoType)} />
-            </Card>
-          ) : null }
-
-
-          <Card className="profile-card big-card">
-            <CardTitle title="Credits" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
-            <div className="roles">
-              {
-                userRoles.map((role) => {
-                  const associatedCredits = userCredits.filter(c => c.roleId === role.roleId)
-
-                  associatedCredits.sort((a, b) => {
-                    if (a.year < b.year) { return -1 }
-                    if (a.year > b.year) { return 1 }
-                    return 0
-                  })
-                  return (
-                    <div className="role-column" key={role.roleId}>
-                      <div className="rounded-header"><span>{role.roleName}</span></div>
-                      <div className="credits">
-                        { associatedCredits.map(credit => (
-                          <p style={{ textAlign: 'left' }} key={credit.title}>{credit.year}{credit.genre ? ` (${credit.genre})` : ''} : {credit.title}</p>
-                        )
-                        )}
+      <Grid fluid>
+        <div className="profile">
+          {
+            authorizedUid === uid ? (
+              <div style={{ textAlign: 'right', marginRight: 20, marginTop: 10, marginBottom: 10 }}>
+                <Link to="/profile/edit">
+                  <RaisedButton label="Edit Profile" icon={<ModeEditIcon />} />
+                </Link>
+              </div>
+            ) : null
+          }
+          <div style={{ display: 'block', margin: 'auto' }}>
+            <Row style={{ marginBottom: 10 }}>
+              <Col xs={12} sm={12} mdOffset={3} md={5}>
+                <Card className="" containerStyle={{ paddingBottom: 0 }}>
+                  <Row>
+                    <Col xs={12} md={6}>
+                      <CardMedia>
+                        <img src={profileImageUrl} alt="" />
+                      </CardMedia>
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <div>
+                        <Row>
+                          <Col xs={12}>
+                            <CardTitle title={name} titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={headline} />
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col xs={12}>
+                            { isNaN(numYears) ?
+                              null
+                              : (
+                                <CardText className="crew-text">
+                                  {numYears} year(s) in industry
+                                </CardText>
+                              )
+                            }
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col xs={12}>
+                            { phone ? (
+                              <CardText className="crew-text">
+                                {phone}
+                              </CardText>
+                            ) : null
+                            }
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col xs={12}>
+                            <CardText className="crew-text">
+                              {email}
+                            </CardText>
+                          </Col>
+                        </Row>
                       </div>
-                    </div>
-                  )
-                })
-              }
-            </div>
-          </Card>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+            </Row>
+            <Row style={{ marginBottom: 10 }}>
+              <Col xs={12} sm={12} mdOffset={3} md={5}>
+                <Card >
+                  <Row>
+                    <Col xs={12}>
+                      <CardTitle title="About Me" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col xs={12}>
+                      { bio ? (
+                        <CardText style={{ lineHeight: '20px', paddingBottom: '40px' }}>
+                          {bio}
+                        </CardText>
+                      ) : (
+                        <CardText style={{ paddingBottom: '48px' }}>
+                Contact me directly for more information.
+                        </CardText>
+                      )
+                      }
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col xs={12}>
+                      <CardActions style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {userLinks.map(link => (
+                          <RaisedButton style={{ marginBottom: 10 }}primary key={link.title} label={link.title} target="_blank" href={formatLink(link.url)} />
+                        ))}
+                      </CardActions>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+            </Row>
+            { video ? (
+              <Row style={{ marginBottom: 10 }}>
+                <Col xs={12} sm={12} mdOffset={3} md={5}>
+                  <Card>
+                    <Row>
+                      <Col xs={12}>
+                        <CardTitle title="Featured Video" titleStyle={{ fontWeight: 500, fontSize: '20px' }} subtitle={video.title} />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col xs={12}>
+                        <embed width="100%" height="500px" src={linkToEmbed(video.url, videoType)} />
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              </Row>
+            ) : null }
+            <Row style={{ marginBottom: 10 }}>
+              <Col xs={12} sm={12} mdOffset={3} md={5}>
+                <Card>
+                  <Row>
+                    <Col xs={12}>
+                      <CardTitle title="Credits" titleStyle={{ fontWeight: 500, fontSize: '20px' }} />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={12}>
+                      <div className="roles">
+                        {
+                          userRoles.map((role) => {
+                            const associatedCredits = userCredits.filter(c => c.roleId === role.roleId)
+
+                            associatedCredits.sort((a, b) => {
+                              if (a.year < b.year) { return -1 }
+                              if (a.year > b.year) { return 1 }
+                              return 0
+                            })
+                            return (
+                              <div className="role-column" key={role.roleId}>
+                                <Row>
+                                  <Col xs={12}>
+                                    <div className="rounded-header">
+                                      <span>{role.roleName}</span>
+                                    </div>
+                                    <div className="credits">
+                                      { associatedCredits.map(credit => (
+                                        <Row>
+                                          <Col xs={12}>
+                                            <p style={{ textAlign: 'left' }} key={credit.title}>{credit.year}{credit.genre ? ` (${credit.genre})` : ''} : {credit.title}</p>
+                                          </Col>
+                                        </Row>
+                                      )
+                                      )}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                    </Col>
+                  </Row>
+                </Card>
+
+              </Col>
+            </Row>
+          </div>
         </div>
-      </div>
+      </Grid>
     )
   }
 }

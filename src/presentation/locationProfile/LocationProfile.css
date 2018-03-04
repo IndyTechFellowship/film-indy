@@ -7,8 +7,18 @@
     width: 80%;
 }
 
+.crew-image-container {
+	height: 100%;
+}
+
 .crew-image {
-    height: 100%;
+  width: 250px !important;
+  height: 250px !important;
+  object-fit: cover !important;
+  border-bottom-left-radius: 2px !important;
+  border-top-left-radius: 2px !important;
+  min-width: 250px !important;
+  min-height: 250px !important;
 }
 
 .crew-headline {
@@ -21,10 +31,40 @@
     margin-top: -10px;
 }
 
+.profile-card {
+  width: 50% !important;
+  height: auto !important;
+  margin-top: 1em !important;
+  display: block !important;
+  margin: auto !important;
+  padding: 1em !important;
+}
+
 .small-card, .big-card {
     padding: 16px;
 }
 
 .big-card {
     max-height: 45%;
+}
+
+@media (max-width: 775px) {
+  .profile-card {
+  	width: 100% !important;
+    height: auto !important;
+    margin-top: 1em !important;
+    display: block !important;
+    margin: auto !important;
+    padding: 1em !important;
+  }
+
+  .crew-image {
+    width: 150px !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-bottom-left-radius: 2px !important;
+    border-top-left-radius: 2px !important;
+    min-width: 150px !important;
+    min-height: 150px !important;
+  }
 }

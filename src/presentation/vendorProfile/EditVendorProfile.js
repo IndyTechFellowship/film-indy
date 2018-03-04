@@ -29,14 +29,7 @@ import './EditVendorProfile.css'
 
 
 const styles = {
-  card: {
-    width: '40%',
-    height: 'auto',
-    marginTop: '1em',
-    display: 'block',
-    margin: 'auto',
-    padding: '1em'
-  },
+
   chipStyle: {
     margin: 6
   }
@@ -144,7 +137,7 @@ class EditVendorProfile extends React.Component {
       const isPublic = get(vendorProfile, 'public', false)
       const video = get(vendorProfile, 'video', '')[0]
       let videoType = 0
-      if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo 
+      if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo
 
       const profileImageUrl = get(vendorProfile, 'profileImage', 'https://images.vexels.com/media/users/3/144866/isolated/preview/927c4907bbd0598c70fb79de7af6a35c-business-building-silhouette-by-vexels.png')
       const addLinkActions = [
@@ -204,7 +197,7 @@ class EditVendorProfile extends React.Component {
             </Link>
           </div>
           <div style={{ paddingTop: 30 }}>
-            <Card style={styles.card}>
+            <Card className="profile-card">
               <div className="toggleContainer">
                 <div className="toggle">
                   <Toggle
@@ -216,14 +209,14 @@ class EditVendorProfile extends React.Component {
                     }}
                   />
                 </div>
-                <div>
+                <div style={{ marginLeft: 20 }}>
                     Just here to search? Turn your profile to "Private" to not appear in other's searches.
                 </div>
               </div>
             </Card>
           </div>
           <div style={{ display: 'flex', marginTop: 30 }}>
-            <Card style={styles.card}>
+            <Card className="profile-card">
               <CardTitle style={{ textAlign: 'left' }}title="General" />
               <div style={{ display: 'flex', justifyContent: 'left', paddingTop: 30 }}>
                 <div>
@@ -333,7 +326,7 @@ class EditVendorProfile extends React.Component {
           </div>
 
           <div style={{ display: 'flex', marginTop: 30 }}>
-            <Card style={styles.card}>
+            <Card className="profile-card">
               <CardTitle style={{ textAlign: 'left' }}title="Point of Contact" />
               <div style={{ display: 'flex', justifyContent: 'left' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', marginLeft: '25px' }}>
@@ -441,7 +434,7 @@ class EditVendorProfile extends React.Component {
           </div>
 
           <div style={{ paddingTop: 30 }}>
-            <Card style={styles.card}>
+            <Card className="profile-card">
               <CardTitle style={{ textAlign: 'left' }} title="About Us" />
               <form onSubmit={handleSubmit(values => updateVendorProfile(values, vendorId))}>
                 <div>
@@ -471,7 +464,7 @@ class EditVendorProfile extends React.Component {
             </Card>
           </div>
           <div style={{ paddingTop: 30 }}>
-            <Card className="profile-card big-card" style={styles.card}>
+            <Card className="profile-card" >
               <CardTitle title="Links" style={{ textAlign: 'left' }} />
               <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingTop: 5 }}>
                 {vendorLinks.map((link, i) => (
@@ -547,7 +540,7 @@ class EditVendorProfile extends React.Component {
           </div>
 
           <div style={{ paddingTop: 30 }}>
-            <Card className="profile-card big-card" style={styles.card}>
+            <Card className="profile-card" >
               <CardTitle style={{ textAlign: 'left' }} title="Featured Video" />
               { video ? (
                 <RaisedButton
@@ -681,4 +674,3 @@ const EditVendorProfileFormEnriched = reduxForm({
 })(EditVendorProfile)
 
 export default EditVendorProfileFormEnriched
-

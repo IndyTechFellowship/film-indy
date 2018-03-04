@@ -90,6 +90,14 @@
     padding: 1em;
 }
 
+.addCard {
+    width: 50%;
+    height: auto;
+    display: block;
+    margin: auto auto 1em auto;
+    padding: 1em;
+}
+
 /* Profile Privacy Card Styles */
 
 .toggle {
@@ -116,4 +124,32 @@
     justify-content: flex-start;
     text-align: left;
     width: 100%;
+}
+
+@media (max-width: 775px) {
+  .profileCard, .passwordCard {
+    box-shadow: none !important;
+    width: 100%;
+  }
+
+  .passwordCard {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: auto auto 1em auto;
+    padding: 1em;
+
+  }
+
+  .addCard {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: auto auto 1em auto;
+      padding: 1em;
+  }
+  .accountHeader {
+      width: 100%;
+      text-align: center
+  }
 }

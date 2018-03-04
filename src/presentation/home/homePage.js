@@ -2,9 +2,11 @@ import React from 'react'
 import '../../App.css'
 import './homePage.css'
 import PropTypes from 'prop-types'
+
 import { InstantSearch, Index, CurrentRefinements, Configure } from 'react-instantsearch/dom'
 import { connectAutoComplete, connectMenu } from 'react-instantsearch/connectors'
-import 'react-instantsearch-theme-algolia/style.css'
+import { Grid, Row, Col } from 'react-flexbox-grid'
+
 import ImageSlider from 'react-slick'
 import { Link } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
@@ -248,7 +250,12 @@ class homePage extends React.Component {
       slidesToShow: 6,
       slidesToScroll: 2,
       nextArrow: <Arrow direction="nextArrow" />,
-      prevArrow: <Arrow direction="prevArrow" />
+      prevArrow: <Arrow direction="prevArrow" />,
+      responsive: [
+        { breakpoint: 400, settings: { slidesToShow: 1, centerMode: true, slidesToScroll: 1, dots: false } },
+        { breakpoint: 768, settings: { slidesToShow: 3 } },
+        { breakpoint: 1024, settings: { slidesToShow: 5 } }
+      ]
     }
     return (
       <div className="home-container">
@@ -257,7 +264,7 @@ class homePage extends React.Component {
             <div className="main-header">Film Indy</div>
             <div className="subheader">If it isn't on video,</div>
             <div className="subheader">it didn't happen.</div>
-            <Card className="searchCard" style={{ width: 700 }}>
+            <Card className="searchCard">
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <SearchIcon className="searchIcon" />
                 <InstantSearch
@@ -329,19 +336,23 @@ class homePage extends React.Component {
         <div className="category-wrapper header">
           <div className="header">Explore Indy</div>
         </div>
-        <div className="category-wrapper">
-          {
-            categories.map(item => (
-              <Card className="category-card" key={item.key}>
-                <Link to={generateCategorySearchLink(item.key)}>
-                  <CardMedia>
-                    <img src={item.image} alt="Explore Categories" style={{ objectFit: 'cover' }} />
-                  </CardMedia>
-                  <CardTitle title={item.title} />
-                </Link>
-              </Card>))
-          }
-        </div>
+        <Grid fluid style={{ padding: 0 }} className="category-wrapper">
+          <Row>
+            {
+              categories.map(item => (
+                <Col xs key={item.key}>
+                  <Card className="category-card">
+                    <Link to={generateCategorySearchLink(item.key)}>
+                      <CardMedia>
+                        <img src={item.image} alt="Explore Categories" style={{ objectFit: 'cover' }} />
+                      </CardMedia>
+                      <CardTitle title={item.title} />
+                    </Link>
+                  </Card>
+                </Col>))
+            }
+          </Row>
+        </Grid>
 
         <div className="roles-wrapper header">
           <div className="header">Popular Roles</div>
