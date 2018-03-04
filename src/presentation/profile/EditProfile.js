@@ -264,8 +264,6 @@ class EditProfile extends React.Component {
     const name = `${get(profile, 'firstName', '')} ${get(profile, 'lastName', '')}`
     const isPublic = get(profile, 'public', false)
     const video = get(userProfile, 'video', '')[0]
-    let videoType = 0
-    if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo 
 
     const addYoutubeActions = [
       <FlatButton
@@ -606,7 +604,7 @@ class EditProfile extends React.Component {
                       editVideo(video, values.title, values.url, uid)
                     }}
                     onDelete={() => {
-                      removeVideo(video, videoType, uid)
+                      removeVideo(video, uid)
                       this.handleEditVideoClose()
                     }}
                     initialValues={{ title: video.title, url: video.url }}
@@ -676,7 +674,7 @@ class EditProfile extends React.Component {
                       </div>
                       <div className="credits">
                         { associatedCredits.map(credit => (
-                          <div>
+                          <div key={credit.title}>
                             <div style={{ textAlign: 'left', display: 'flex', alignItems: 'center' }} key={credit.title}>
                               {credit.year}{credit.genre ? ` (${credit.genre})` : ''} : {credit.title}
                               <div>

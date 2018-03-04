@@ -158,8 +158,6 @@ class EditLocationProfile extends React.Component {
       const locationLinks = get(locationProfile, 'links', [])
       const isPublic = get(locationProfile, 'public', false)
       const video = get(locationProfile, 'video', '')[0]
-      let videoType = 0
-      if (video) videoType = video.url.indexOf('youtube') > -1 ? 1 : 2 // 1 for Youtube, 2 for Vimeo
 
       const addLinkActions = [
         <FlatButton
@@ -532,7 +530,7 @@ class EditLocationProfile extends React.Component {
                         editLocationVideo(video, values.title, values.url, locationId)
                       }}
                       onDelete={() => {
-                        removeLocationVideo(video, videoType, locationId)
+                        removeLocationVideo(video, locationId)
                         this.handleEditVideoClose()
                       }}
                       initialValues={{ title: video.title, url: video.url }}
