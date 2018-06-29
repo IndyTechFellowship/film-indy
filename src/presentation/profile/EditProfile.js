@@ -556,7 +556,7 @@ class EditProfile extends React.Component {
                 labelColor="#fff"
                 labelPosition="before"
                 icon={<EditIcon />}
-                label={video.title}
+                label='Edit Video'
                 buttonStyle={{ borderRadius: 5 }}
                 style={{ marginRight: 5 }}
                 key={video.title}
